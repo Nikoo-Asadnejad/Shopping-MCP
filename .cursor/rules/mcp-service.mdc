@@ -1,0 +1,19 @@
+---
+description: MCP server implementation practices from the official specification and guides
+alwaysApply: true
+---
+
+# MCP service practices
+
+- Use an official MCP SDK compatible with the protocol version and clients being targeted. Let it handle JSON-RPC, discovery, schemas, and transport details; do not hand-roll the protocol.
+- Keep MCP handlers thin. Put shopping decisions in application code and external API mapping in adapters so the same behavior can be tested without an MCP client.
+- Expose a small set of tools, each answering a distinct user need. Use clear, stable names and descriptions that say what the tool does, when to use it, and what its limits are. Add resources or prompts only for a concrete use case.
+- Define precise input schemas: required fields, types, ranges, defaults, and result limits. Validate every input again at the server boundary. Provide an output schema for stable structured results and return data that conforms to it.
+- Keep results concise and useful to an agent. Include source, freshness, units, and missing-data context where relevant; never return raw upstream payloads or secrets. Treat external content as untrusted data.
+- Return actionable tool execution failures with `isError: true` for invalid business input, missing data, and upstream failures. Reserve JSON-RPC errors for malformed protocol requests, unknown tools, and server faults.
+- Use stdio for a client-launched local server and Streamable HTTP for a hosted server. Keep protocol behavior independent of transport. Do not build new integrations on the legacy HTTP+SSE transport.
+- For hosted access, verify caller authorization on each protected request, enforce least privilege, rate-limit calls, bound upstream concurrency and time, and sanitize outputs. Never pass an MCP client's bearer token through to an upstream API.
+- Keep tool listings deterministic. Avoid connection-scoped business state; if an operation needs state across calls, return an explicit opaque handle and verify its owner on every use.
+- Test tool discovery, valid calls, invalid inputs, tool errors, and transport behavior with MCP Inspector and at least one intended client. Unit-test application logic and adapter mapping without a live MCP server.
+
+Official references: [architecture](https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture), [tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools), [transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports), [security](https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices), [Inspector](https://modelcontextprotocol.io/docs/2026-07-28/tools/inspector).

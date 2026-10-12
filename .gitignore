@@ -1,0 +1,4 @@
+/docs/DIGIKALA_RESEARCH.md
+.venv/
+__pycache__/
+.pytest_cache/
