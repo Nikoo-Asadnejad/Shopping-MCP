@@ -59,13 +59,15 @@ Add only after phase 1 usage shows value: similar products, deeper seller-offer 
 
 ### Phase 4 — additional stores
 
-Add a second store through a narrow store client interface and shared shopper models (`Product`, `Offer`, `Specification`). Keep store-specific API fields, currency handling, and availability semantics inside each adapter. Cross-store matching must use stable identifiers or explicit evidence; otherwise label candidates as possible matches. Expose cross-store comparison only once matching quality is tested.
+Add a second store through a narrow store client interface and shared shopper models (`ProductDetails`, `ProductSummary`, `Offer`, `Specification`). Keep store-specific API fields, currency handling, and availability semantics inside each adapter. Cross-store matching must use stable identifiers or explicit evidence; otherwise label candidates as possible matches. Expose cross-store comparison only once matching quality is tested.
 
 ## Code shape
 
 ```text
 src/shopping_mcp/
-  domain/                 # store-neutral product, offer, and review models
+  domain/
+    product/             # product aggregate and search projection; one model per file
+    review/              # review aggregate and page projection; one model per file
   infrastructure/
     shops/
       base.py             # abstract Shop contract for common operations

@@ -1,0 +1,19 @@
+---
+description: Pragmatic domain-driven design for the shopping service
+alwaysApply: true
+---
+
+# Domain-driven design
+
+- Model the shopping problem in the language of shoppers and domain experts. Use the same meaning for terms such as product, variant, offer, seller, availability, and price in code, tests, and documentation; clarify ambiguous terms before adding abstractions.
+- Treat a bounded context as a boundary for a consistent model, not automatically as a microservice or a store integration. Keep one cohesive service until different business language or rules justify a split.
+- Keep domain concepts and rules independent of MCP, HTTP, database, and store-specific response shapes. Put transport contracts at the interface boundary and translate external data in infrastructure adapters.
+- Put business decisions and invariants where they can be reused and tested without a transport: in a domain type or domain service when the rule is genuinely domain-specific. Let application use cases coordinate calls and results, and keep MCP handlers thin.
+- Define each aggregate around a cohesive consistency boundary and name its root explicitly. Keep related domain concepts, entities, and value objects close to that root; access aggregate members through the root when enforcing aggregate invariants.
+- Give each aggregate its own folder under `domain/`. Put each aggregate root, entity, value object, and domain service in a separate, clearly named file. Keep a concept shared by multiple aggregates outside their folders only when it truly has the same meaning and rules in each.
+- Use value objects for concepts whose value and rules matter, and entities only when identity matters over time. Do not make unrelated concepts part of one aggregate just to share a folder.
+- Do not introduce repositories, factories, domain events, CQRS, separate services, or extra interfaces by default. Add a pattern when a concrete domain or persistence need makes it useful. Keep read-only projections outside aggregates when they enforce no aggregate invariant.
+- Keep upstream store vocabulary, units, status codes, and missing-value semantics inside each adapter. Map them into explicit shopping concepts before comparison or recommendation; do not let one store's model become the shared domain model.
+- Test domain rules with realistic examples and edge cases. Test adapter translation separately with representative upstream responses. Change the model when new evidence exposes a mistaken assumption.
+
+References: [Eric Evans, DDD Reference](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf); [Microsoft, domain analysis](https://learn.microsoft.com/azure/architecture/microservices/model/domain-analysis); [Microsoft, DDD layers](https://learn.microsoft.com/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice); [Microsoft, domain model](https://learn.microsoft.com/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-domain-model); [Microsoft, repository guidance](https://learn.microsoft.com/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design).

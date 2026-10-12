@@ -2,7 +2,8 @@
 
 from abc import ABC, abstractmethod
 
-from shopping_mcp.domain import ProductDetails, ReviewPage, SearchPage
+from shopping_mcp.domain.product import ProductDetails, SearchPage
+from shopping_mcp.domain.review import ReviewPage
 
 
 class Shop(ABC):

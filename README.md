@@ -77,7 +77,16 @@ Current files:
 ├── README.md
 ├── pyproject.toml
 ├── src/shopping_mcp/
-│   ├── domain/                    # Store-neutral product and review models
+│   ├── domain/
+│   │   ├── product/               # Product aggregate and read projections
+│   │   │   ├── product_details.py
+│   │   │   ├── product_summary.py
+│   │   │   ├── offer.py
+│   │   │   ├── specification.py
+│   │   │   └── search_page.py
+│   │   └── review/                # Review aggregate and read projection
+│   │       ├── review.py
+│   │       └── review_page.py
 │   └── infrastructure/
 │       └── shops/
 │           ├── base.py            # Abstract Shop contract

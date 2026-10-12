@@ -5,15 +5,14 @@ from typing import Any
 
 import httpx
 
-from shopping_mcp.domain import (
+from shopping_mcp.domain.product import (
     Offer,
     ProductDetails,
     ProductSummary,
-    Review,
-    ReviewPage,
     SearchPage,
     Specification,
 )
+from shopping_mcp.domain.review import Review, ReviewPage
 from shopping_mcp.infrastructure.shops.base import Shop
 
 _API_URL = "https://api.digikala.com"
