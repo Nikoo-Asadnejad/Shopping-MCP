@@ -1,0 +1,104 @@
+{
+  "deployment": {
+    "service_id": "srv-db8c5htg1s2s739ptp70",
+    "deploy_id": "dep-db8cdkqvcj2c73905dug",
+    "commit": "dd79a019f13b5ff2491397f89b61d58246c9002d",
+    "region": "oregon",
+    "plan": "free",
+    "status": "update_failed",
+    "finished_at": "2026-10-15T12:28:52.506703Z",
+    "dashboard_url": "https://dashboard.render.com/web/srv-db8c5htg1s2s739ptp70/deploys/dep-db8cdkqvcj2c73905dug"
+  },
+  "source": "Render MCP get_service, get_deploy and list_logs; reports reconstructed from deployment stdout",
+  "validation": {
+    "offline_tests_passed": 95,
+    "live_test_skipped": 1,
+    "ruff_check": "passed",
+    "format_check": "passed"
+  },
+  "observations": [
+    "Search returned HTTP 307 with text/html from DigiCDN Edge.",
+    "Resolved Location matches the exact original request URL, including query; logged destination strips query, fragment and user information.",
+    "Render restarted the failed process once; both observed probe runs returned the same self-redirect.",
+    "The probe stopped after search and did not follow redirects or fetch the other endpoint families.",
+    "The operator-supplied render/frankfurt label is incorrect; Render API reports Oregon.",
+    "Auto-deploy waits for checksPass; the commit has zero GitHub checks/statuses, so this diagnostic deploy was triggered manually."
+  ],
+  "interpretation": "Consistent with edge access filtering or a challenge; the precise reason is not established by these headers. No usable store data was returned to this Render service.",
+  "probe_reports": [
+    {
+      "observed_at": "2026-10-15T12:28:49.102546+00:00",
+      "location_label": "render/frankfurt",
+      "location_verified": false,
+      "note": "Location label is operator-supplied; this does not prove host/device access elsewhere.",
+      "endpoints": {
+        "search": {
+          "attempted": true,
+          "url": "https://api.digikala.com/v1/search/?q=laptop&page=1",
+          "http_status": 307,
+          "body_status": null,
+          "content_type": "text/html; charset=UTF-8",
+          "server": "DigiCDN Edge",
+          "redirect_location": "https://api.digikala.com/v1/search/",
+          "redirect_query_redacted": true,
+          "redirect_same_url": true,
+          "elapsed_ms": 870
+        },
+        "autocomplete": {
+          "attempted": false,
+          "reason": "Stopped after upstream denied or redirected access"
+        },
+        "details": {
+          "attempted": false,
+          "reason": "Stopped after upstream denied or redirected access"
+        },
+        "comments": {
+          "attempted": false,
+          "reason": "Stopped after upstream denied or redirected access"
+        },
+        "recommendations": {
+          "attempted": false,
+          "reason": "Stopped after upstream denied or redirected access"
+        }
+      },
+      "passed": false
+    },
+    {
+      "observed_at": "2026-10-15T12:29:06.706080+00:00",
+      "location_label": "render/frankfurt",
+      "location_verified": false,
+      "note": "Location label is operator-supplied; this does not prove host/device access elsewhere.",
+      "endpoints": {
+        "search": {
+          "attempted": true,
+          "url": "https://api.digikala.com/v1/search/?q=laptop&page=1",
+          "http_status": 307,
+          "body_status": null,
+          "content_type": "text/html; charset=UTF-8",
+          "server": "DigiCDN Edge",
+          "redirect_location": "https://api.digikala.com/v1/search/",
+          "redirect_query_redacted": true,
+          "redirect_same_url": true,
+          "elapsed_ms": 804
+        },
+        "autocomplete": {
+          "attempted": false,
+          "reason": "Stopped after upstream denied or redirected access"
+        },
+        "details": {
+          "attempted": false,
+          "reason": "Stopped after upstream denied or redirected access"
+        },
+        "comments": {
+          "attempted": false,
+          "reason": "Stopped after upstream denied or redirected access"
+        },
+        "recommendations": {
+          "attempted": false,
+          "reason": "Stopped after upstream denied or redirected access"
+        }
+      },
+      "passed": false
+    }
+  ]
+}

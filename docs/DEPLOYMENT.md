@@ -20,11 +20,15 @@ HTTP is stateless and uses JSON tool responses. FastMCP owns protocol handling; 
 
 Use the repository's [Blueprint](../render.yaml) on the actual Render account. It selects the planned Free Frankfurt prototype, installs the locked environment, runs `shopping-probe`, and starts HTTP on Render's assigned port only after all five endpoint families pass status and schema checks. `/health` is the configured health-check path. See [Render's Blueprint reference](https://render.com/docs/blueprint-spec).
 
+The first actual service was manually created in Oregon, despite the command’s `render/frankfurt` label. Its diagnostic deployment returned a self-redirect from DigiCDN Edge and failed the access gate; see [captured evidence](evidence/render-oregon-redirect.json). A successful deployment or Digikala access from Render is not claimed.
+
 Save the deployment ID, actual region and startup access report before accepting that host. Probe fixtures under `/tmp/digikala-probe` are ephemeral. A denial, redirect, rate limit or changed schema fails startup. Investigate the report; do not bypass upstream blocks. A successful local probe proves only local access.
 
 Render's `RENDER_EXTERNAL_HOSTNAME` is automatically allowed by the MCP Host guard. For a custom domain or another host, set `SHOPPING_MCP_ALLOWED_HOSTS` to comma-separated hostnames. Browser origins are checked; configure additional trusted origins with FastMCP's `FASTMCP_HTTP_ALLOWED_ORIGINS` JSON array only when required by the client. The server enables no permissive CORS policy.
 
 For private prototype access, set `SHOPPING_MCP_TOKEN` to a random secret of at least 32 characters in the host's environment, then configure bearer headers in a compatible client. An unset variable permits anonymous read-only use; an empty/short secret stops startup. Authentication is verified on MCP requests through FastMCP with a read-only scope. Health/privacy remain public. This shared-token mode provides no OAuth login or account management; verify support in the selected client. Keep tokens out of repository files and logs. `.env` is ignored and is not loaded automatically.
+
+The current service waits for CI checks to pass before auto-deploying, but the repository has no CI checks. The diagnostic deployment was triggered manually after local tests passed. Configure CI or deliberately select On Commit if automatic deployment is desired; see [Render deploy behavior](https://render.com/docs/deploys).
 
 ## Resource and privacy behavior
 
