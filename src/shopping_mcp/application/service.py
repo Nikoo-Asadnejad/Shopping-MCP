@@ -47,15 +47,15 @@ class ShoppingService:
         self._suggestions = suggestions
 
     async def search_products(self, request: SearchInput) -> SearchPage:
-        result = await self.shop.search_products(
-            request.query, request.page, request.filters
-        )
-        filters = request.filters
+        filters = request.filters.model_copy(update={"available_only": True})
+        result = await self.shop.search_products(request.query, request.page, filters)
 
         def eligible(product):
             price = product.price_toman
             return (
-                (not filters.available_only or product.available)
+                product.available
+                and price is not None
+                and price > 0
                 and (
                     filters.min_price_toman is None
                     or price is not None
@@ -75,7 +75,7 @@ class ShoppingService:
 
         cards = tuple(product for product in result.products if eligible(product))
         notes = [
-            "Shipping cost is unknown. Up to 20 cards from this upstream page; pagination totals describe upstream results."
+            "Only available products with a known positive price are returned. Shipping cost is unknown. Up to 20 cards from this upstream page; pagination totals describe upstream results."
         ]
         if len(cards) != len(result.products):
             notes.append(

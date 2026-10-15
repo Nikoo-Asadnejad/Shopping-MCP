@@ -30,7 +30,10 @@ def test_discovery_and_all_six_tools(service_factory, payloads):
             assert all(tool.output_schema for tool in tools)
             assert all(tool.annotations.read_only_hint for tool in tools)
             calls = [
-                ("search_products", {"query": "laptop"}),
+                (
+                    "search_products",
+                    {"query": "laptop", "filters": {"available_only": False}},
+                ),
                 ("get_product_details", {"product": "123"}),
                 ("compare_products", {"products": ["123", "456"]}),
                 ("summarize_reviews", {"product": "123", "max_reviews": 20}),
@@ -47,6 +50,12 @@ def test_discovery_and_all_six_tools(service_factory, payloads):
                     assert item["url"] == "https://www.digikala.com/product/dkp-123/"
                     assert item["rating_stars"] == 4.0
                     assert item["rating_count"] == 100
+                    assert item["price_toman"] == 1000
+                    assert item["price_unit"] == "toman"
+                    assert all(
+                        product["available"] and product["price_toman"] > 0
+                        for product in result.structured_content["products"]
+                    )
                 elif name == "get_product_details":
                     assert result.structured_content["image_url"] == image_url
             for name, arguments in [

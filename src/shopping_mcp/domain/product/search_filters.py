@@ -10,7 +10,7 @@ class SearchFilters(BaseModel):
     max_price_toman: int | None = Field(default=None, ge=0)
     brand_id: int | None = Field(default=None, gt=0)
     category_id: int | None = Field(default=None, gt=0)
-    available_only: bool = False
+    available_only: bool = True
 
     @model_validator(mode="after")
     def valid_price_range(self):

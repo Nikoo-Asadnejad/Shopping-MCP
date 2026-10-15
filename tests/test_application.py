@@ -214,6 +214,53 @@ def test_search_rechecks_filters_and_bounds_cards(service_factory):
     assert result.source_url and result.retrieved_at
 
 
+@pytest.mark.parametrize("filters", [None, SearchFilters(available_only=False)])
+def test_search_always_returns_available_priced_products(
+    service_factory, payloads, filters
+):
+    data = deepcopy(payloads["search"])
+    products = data["data"]["products"]
+    products[1]["status"] = "out_of_stock"
+    products[2]["default_variant"]["status"] = "out_of_stock"
+    products[3]["default_variant"]["price"] = {}
+    zero_price = deepcopy(products[0])
+    zero_price["id"] = 1000
+    zero_price["url"]["uri"] = "/product/dkp-1000/"
+    zero_price["default_variant"]["price"]["selling_price"] = 0
+    products.append(zero_price)
+    request = SearchInput(query="laptop", **({"filters": filters} if filters else {}))
+
+    result, calls = run_service(
+        service_factory, "search_products", request, {"search": data}
+    )
+
+    assert [item.id for item in result.products] == ["123"]
+    assert result.products[0].price_toman == 1000
+    assert result.products[0].available
+    assert calls[0].url.params["has_selling_stock"] == "1"
+    assert result.total_items == data["data"]["pager"]["total_items"]
+    assert any("pagination totals describe upstream" in note for note in result.notes)
+
+
+def test_search_with_no_available_products_returns_empty_page(
+    service_factory, payloads
+):
+    data = deepcopy(payloads["search"])
+    for product in data["data"]["products"]:
+        product["status"] = "out_of_stock"
+
+    result, calls = run_service(
+        service_factory,
+        "search_products",
+        SearchInput(query="laptop"),
+        {"search": data},
+    )
+
+    assert not result.products
+    assert len(calls) == 1
+    assert result.source_url and result.retrieved_at
+
+
 @pytest.mark.parametrize(
     "make_request",
     [
