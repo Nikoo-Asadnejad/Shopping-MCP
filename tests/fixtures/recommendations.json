@@ -1,0 +1,211 @@
+{
+  "status": 200,
+  "data": {
+    "data": {
+      "products": [
+        {
+          "id": 123,
+          "title_fa": "لپ تاپ نمونه 123",
+          "title_en": "Sample laptop 123",
+          "url": {
+            "uri": "/product/dkp-123/"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 80,
+            "count": 100
+          },
+          "category": {
+            "id": 18,
+            "title_fa": "لپ تاپ"
+          },
+          "brand": {
+            "id": 7
+          },
+          "default_variant": {
+            "id": 1230,
+            "status": "marketable",
+            "price": {
+              "selling_price": 10000
+            },
+            "seller": {
+              "title": "فروشنده نمونه"
+            },
+            "color": {
+              "title": "مشکی"
+            },
+            "warranty": {
+              "title_fa": "۱۸ ماه"
+            }
+          },
+          "variants": [
+            {
+              "id": 1230,
+              "status": "marketable",
+              "price": {
+                "selling_price": 10000
+              },
+              "seller": {
+                "title": "فروشنده نمونه"
+              },
+              "color": {
+                "title": "مشکی"
+              },
+              "warranty": {
+                "title_fa": "۱۸ ماه"
+              }
+            },
+            {
+              "id": 1231,
+              "status": "marketable",
+              "price": {
+                "selling_price": 9900
+              },
+              "seller": {
+                "title": "فروشنده نمونه"
+              },
+              "color": {
+                "title": "نقره ای"
+              },
+              "warranty": {
+                "title_fa": "۱۸ ماه"
+              }
+            }
+          ],
+          "review": {
+            "description": "توضیح محصول"
+          },
+          "specifications": [
+            {
+              "title": "حافظه",
+              "attributes": [
+                {
+                  "title": "رم",
+                  "values": [
+                    "8 گیگابایت"
+                  ]
+                },
+                {
+                  "title": "حافظه داخلی",
+                  "values": [
+                    "256 گیگابایت"
+                  ]
+                }
+              ]
+            }
+          ],
+          "comments_overview": {
+            "overview": "خلاصه دیجی کالا",
+            "advantages": [
+              "سبک"
+            ],
+            "disadvantages": [
+              "باتری ضعیف"
+            ]
+          }
+        },
+        {
+          "id": 456,
+          "title_fa": "لپ تاپ نمونه 456",
+          "title_en": "Sample laptop 456",
+          "url": {
+            "uri": "/product/dkp-456/"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 100,
+            "count": 1
+          },
+          "category": {
+            "id": 18,
+            "title_fa": "لپ تاپ"
+          },
+          "brand": {
+            "id": 7
+          },
+          "default_variant": {
+            "id": 4560,
+            "status": "marketable",
+            "price": {
+              "selling_price": 18000
+            },
+            "seller": {
+              "title": "فروشنده نمونه"
+            },
+            "color": {
+              "title": "مشکی"
+            },
+            "warranty": {
+              "title_fa": "۱۸ ماه"
+            }
+          },
+          "variants": [
+            {
+              "id": 4560,
+              "status": "marketable",
+              "price": {
+                "selling_price": 18000
+              },
+              "seller": {
+                "title": "فروشنده نمونه"
+              },
+              "color": {
+                "title": "مشکی"
+              },
+              "warranty": {
+                "title_fa": "۱۸ ماه"
+              }
+            },
+            {
+              "id": 4561,
+              "status": "marketable",
+              "price": {
+                "selling_price": 17900
+              },
+              "seller": {
+                "title": "فروشنده نمونه"
+              },
+              "color": {
+                "title": "نقره ای"
+              },
+              "warranty": {
+                "title_fa": "۱۸ ماه"
+              }
+            }
+          ],
+          "review": {
+            "description": "توضیح محصول"
+          },
+          "specifications": [
+            {
+              "title": "حافظه",
+              "attributes": [
+                {
+                  "title": "رم",
+                  "values": [
+                    "16 گیگابایت"
+                  ]
+                },
+                {
+                  "title": "حافظه داخلی",
+                  "values": [
+                    "256 گیگابایت"
+                  ]
+                }
+              ]
+            }
+          ],
+          "comments_overview": {
+            "overview": "خلاصه دیجی کالا",
+            "advantages": [
+              "سبک"
+            ],
+            "disadvantages": [
+              "باتری ضعیف"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

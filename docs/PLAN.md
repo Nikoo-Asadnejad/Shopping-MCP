@@ -1,21 +1,28 @@
 # Shopping MCP implementation plan
 
-Research snapshot: 2026-10-12. Detailed Digikala API observations are kept in a local file excluded from Git; source links for the main decisions appear below.
+Research snapshot: 2026-10-12. Implementation update: 2026-10-15. Detailed Digikala API observations are kept in a local file excluded from Git; source links for the main decisions appear below.
 
 ## Goal and boundaries
 
 Build a reliable, read-only shopping assistant for Iranian stores. In phase 1, a user should be able to ask in Persian or English for products, inspect a product, summarize buyer reviews, compare a short list, and find the best fit for a budget and stated needs using current Digikala data. Every result should show its source URL, price unit, and retrieval time. The assistant should state when price, stock, delivery cost, review evidence, or a specification is unavailable.
 
-The project should support local MCP clients and a remotely hosted Streamable HTTP MCP endpoint. A small HTTP API will expose the same application operations to a Custom GPT Action if that route proves usable on mobile. No account login, cart, checkout, payment, or price history database is in phase 1.
+The project should support local MCP clients and a remotely hosted Streamable HTTP MCP endpoint. The selected user-facing route is a ChatGPT MCP connection packaged as a plugin, for users in Iran. Render Free is the prototype host. Render has no Iran region; Frankfurt is the provisional host region, pending actual access and latency checks ([Render regions](https://render.com/docs/regions)). A Custom GPT Action and its small HTTP API remain a fallback if the chosen route fails on the intended account/device. No account login, cart, checkout, payment, or price history database is in phase 1.
 
 **Transport decision:** Streamable HTTP at `/mcp` is the hosted MCP transport. FastMCP will handle protocol details; `stdio` is an optional local transport for clients that launch the server themselves. We will not add a legacy HTTP+SSE endpoint. Both transports call the same application operations and return the same structured results.
+
+## Implementation status
+
+- **Phase 0: prepared, acceptance pending.** A low-volume `shopping-probe` validates production response mapping, records status codes, timing and sanitized live fixtures, stopping on denial/redirect/rate limit. The latest local check on 2026-10-15 returned HTTP/body 200 with usable data for all five families; sanitized responses and timings are saved in [live evidence](evidence/implementation-live/access-report.json). An earlier search returned HTTP 307, so access can vary. No successful Render access is claimed. `render.yaml` prepares a Free Frankfurt service with a startup access gate. Actual Render access, complete hosted-usage terms/access review, and an Iranian phone MCP/plugin demonstration remain pending. See [phase-0 evidence and checklist](PHASE_0.md).
+- **Phase 1: six operations implemented.** Shared async client, compact models, validation, conservative review synthesis, same-category comparison, budget/feature/type-gated ranking, and FastMCP tools exist. Categories are resolved dynamically from Digikala hints or an explicit category ID, with no fixed product-type vocabulary; ambiguous requests return choices. Stdio and Streamable HTTP `/mcp` call the same service. 90 offline tests cover parsing, failures, review quality and ranking; fixture provenance is explicit. FastMCP-client transport checks passed; official Inspector 2.11.0 discovery and all six HTTP fixture calls now pass, including invalid-input errors. See [client setup and operation limits](CLIENT_SETUP.md).
+- **Phase 1 live acceptance is partially verified:** all five API families now return usable local responses and representative mapping checks pass. Confirm complete shopper-facing outputs against linked evidence and reproduce access on Render. Test the intended GUI/mobile client after host access is established. Transport tests use offline fixtures, not invented live successes.
+- **Phase 2 code is prepared:** a minimal FastAPI app mounts the same MCP server at `/mcp`, propagates its lifespan, exposes `/health` and `/privacy`, enforces a 16 KiB body limit and Host/Origin validation, and supports optional scoped bearer access. Tool traffic is capped at 30 calls/minute and four concurrent calls per process; a 30-second/128-entry snapshot cache retains original retrieval times. Query-free application metadata logs, a schema-validating startup/opt-in probe, [deployment instructions](DEPLOYMENT.md), and [Persian onboarding](CLIENT_SETUP_FA.md) are included. Public deployment, account/phone acceptance, hosted-usage review and cold-start measurement remain pending. Actions routes are conditional on needing that fallback.
 
 ## Product scope and milestones
 
 ### Phase 0 — prove access and client fit
 
-1. Confirm that Digikala's read-only web endpoints remain accessible from the chosen deployment region. Record status codes and representative response fixtures for search, autocomplete, details, comments, and recommendations. Do not assume local access implies cloud access.
-2. Confirm which ChatGPT route works on mobile: a Custom GPT with Actions, or a ChatGPT plugin/MCP connection if available in the intended account and app. Test with the actual account and device before choosing the final delivery path.
+1. Confirm that Digikala's read-only web endpoints remain accessible from the actual Render Free service in the provisional Frankfurt region, and that the phone in Iran can reach it. Record status codes and representative response fixtures for search, autocomplete, details, comments, and recommendations. Do not assume local access implies cloud access.
+2. Demonstrate the selected ChatGPT MCP connection/plugin route on mobile using the intended account and app; investigate Custom GPT Actions only if that route is unavailable. Test with the actual account and device before choosing the final delivery path.
 3. Check Digikala's current terms and access limits for the intended hosted usage. Keep traffic low and stop or adapt if access is denied or terms disallow the intended use.
 
 **Exit:** one realistic request works from the candidate host, and the chosen user-facing route is demonstrated on mobile.
@@ -47,8 +54,8 @@ Use one async Digikala client with connection reuse, short timeouts, bounded con
 
 1. Expose the same FastMCP tools over Streamable HTTP at `/mcp`. Provide local `stdio` instructions where useful for Cursor and Claude development workflows.
 2. Add a minimal FastAPI surface (`/health` and the few read-only JSON routes needed for GPT Actions). Mount FastMCP in that app and share application services; do not duplicate parsing or business rules. FastMCP's [HTTP/FastAPI guidance](https://gofastmcp.com/deployment/http) documents the ASGI/lifespan integration.
-3. Publish an OpenAPI schema for those routes, a simple Persian Custom GPT instruction set, and a short mobile onboarding guide. Test end-to-end in the mobile ChatGPT app. OpenAI's [GPT Actions documentation](https://developers.openai.com/api/docs/actions/introduction) describes the REST integration; its [plugin documentation](https://developers.openai.com/plugins/build/mcp-server) describes a separate MCP route. Availability and mobile behavior must be checked for the intended account.
-4. Deploy from a GitHub repository to a Python-capable HTTPS host. GitHub Pages cannot run Python server code ([GitHub docs](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)). Render Free is a prototype candidate, but it sleeps after 15 idle minutes and can take about a minute to wake; that may be too slow for mobile use ([Render docs](https://render.com/docs/free)). Choose the actual host after testing upstream access, cold starts, latency, and current free limits.
+3. Publish a short Persian MCP/plugin onboarding guide for the selected route. Add OpenAPI and Custom GPT instructions only if the Actions fallback is needed. Test end-to-end in the mobile ChatGPT app. OpenAI's [GPT Actions documentation](https://developers.openai.com/api/docs/actions/introduction) describes the REST integration; its [plugin documentation](https://developers.openai.com/plugins/build/mcp-server) describes a separate MCP route. Availability and mobile behavior must be checked for the intended account.
+4. Deploy from a GitHub repository to a Python-capable HTTPS host. GitHub Pages cannot run Python server code ([GitHub docs](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)). Render Free is a prototype candidate, but it sleeps after 15 idle minutes and can take about a minute to wake; that may be too slow for mobile use ([Render docs](https://render.com/docs/free)). Keep Render Free as the selected prototype candidate; accept it only after testing upstream access from Frankfurt, cold starts and latency on an Iranian phone, and current free limits. If access is denied, stop and reassess hosting; do not bypass blocks.
 5. Add a privacy page, a clear unofficial-service notice, request logging without personal queries, basic health checks, and a small smoke check for upstream schema drift.
 
 **Exit:** MCP Inspector and a remote client can discover and call tools through Streamable HTTP at `/mcp`; a remote client can search, summarize reviews, and recommend a budget fit; the chosen ChatGPT mobile path works; the endpoint survives restart and handles a Digikala outage cleanly.
@@ -99,11 +106,11 @@ Start as one Python package and one deployed service. `uv` manages dependencies 
 | Review summaries or rankings overstate weak evidence | Show sample size, buyer status, rating count, source and missing data; avoid a single confident winner when evidence is thin. |
 | Public hosted endpoint gets abused | Use input limits, bounded result sizes, cache short-lived reads, apply rate limits, and add access control if needed. |
 
-## Initial backlog order
+## Remaining acceptance order
 
-1. Finish the dependency lockfile and expand fixtures for the five verified Digikala endpoint families.
-2. Complete the shared client and response mapping for required fields and error cases.
-3. Implement the six application operations on the shop adapter.
-4. Expose local MCP tools and test them with Inspector.
-5. Add the Streamable HTTP endpoint at `/mcp` and minimal JSON/OpenAPI routes.
-6. Validate deployment and the mobile ChatGPT path, then document setup.
+1. Deploy the prepared candidate to the actual Render account and save its region/deployment identifier plus the startup access report. A denied/redirected probe must stop startup.
+2. Resolve intended hosted use against the full current Digikala terms and access limits; no API quota or hosted-use permission has been established.
+3. Capture successful sanitized fixtures for search, autocomplete, details, comments and recommendations on an accessible candidate host; verify filter parameter semantics, seller/variant fields and representative outputs.
+4. Inspector discovery and all six fixture-backed HTTP calls pass. Run an intended remote client with live evidence for all six operations; retain invalid-input/outage checks.
+5. Demonstrate the selected MCP/plugin route on the user's phone in Iran, including Render Free cold-start latency; document exact account/app availability from that test.
+6. Validate the implemented phase-2 safeguards and onboarding on the public deployment. Implement FastAPI/OpenAPI Actions routes only if that fallback becomes necessary.

@@ -1,0 +1,106 @@
+{
+  "status": 200,
+  "data": {
+    "product": {
+      "id": 999,
+      "title_fa": "لپ تاپ نمونه 999",
+      "title_en": "Sample laptop 999",
+      "url": {
+        "uri": "/product/dkp-999/"
+      },
+      "status": "marketable",
+      "rating": {
+        "rate": 100,
+        "count": 400
+      },
+      "category": {
+        "id": 18,
+        "title_fa": "لپ تاپ"
+      },
+      "brand": {
+        "id": 7
+      },
+      "default_variant": {
+        "id": 9990,
+        "status": "marketable",
+        "price": {
+          "selling_price": 30000
+        },
+        "seller": {
+          "title": "فروشنده نمونه"
+        },
+        "color": {
+          "title": "مشکی"
+        },
+        "warranty": {
+          "title_fa": "۱۸ ماه"
+        }
+      },
+      "variants": [
+        {
+          "id": 9990,
+          "status": "marketable",
+          "price": {
+            "selling_price": 30000
+          },
+          "seller": {
+            "title": "فروشنده نمونه"
+          },
+          "color": {
+            "title": "مشکی"
+          },
+          "warranty": {
+            "title_fa": "۱۸ ماه"
+          }
+        },
+        {
+          "id": 9991,
+          "status": "marketable",
+          "price": {
+            "selling_price": 29900
+          },
+          "seller": {
+            "title": "فروشنده نمونه"
+          },
+          "color": {
+            "title": "نقره ای"
+          },
+          "warranty": {
+            "title_fa": "۱۸ ماه"
+          }
+        }
+      ],
+      "review": {
+        "description": "توضیح محصول"
+      },
+      "specifications": [
+        {
+          "title": "حافظه",
+          "attributes": [
+            {
+              "title": "رم",
+              "values": [
+                "8 گیگابایت"
+              ]
+            },
+            {
+              "title": "حافظه داخلی",
+              "values": [
+                "256 گیگابایت"
+              ]
+            }
+          ]
+        }
+      ],
+      "comments_overview": {
+        "overview": "خلاصه دیجی کالا",
+        "advantages": [
+          "سبک"
+        ],
+        "disadvantages": [
+          "باتری ضعیف"
+        ]
+      }
+    }
+  }
+}

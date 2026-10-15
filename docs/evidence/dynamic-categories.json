@@ -1,0 +1,36 @@
+{
+  "query": "ماشین لباسشویی",
+  "suggestions": {
+    "suggestions": [
+      "ماشین لباسشویی ال جی",
+      "ماشین لباسشویی دوقلو"
+    ],
+    "categories": [
+      {
+        "id": 5804,
+        "title": "ماشین لباسشویی",
+        "keywords": [
+          "ماشین لباسشویی پاکشوما",
+          "ماشین لباسشویی دوو",
+          "ماشین لباسشویی اسنوا",
+          "ماشین لباسشویی بوش",
+          "ماشین لباسشویی جی پلاس",
+          "ماشین لباسشویی ایکس ویژن"
+        ]
+      }
+    ],
+    "source_url": "https://api.digikala.com/v1/autocomplete/?q=%D9%85%D8%A7%D8%B4%DB%8C%D9%86+%D9%84%D8%A8%D8%A7%D8%B3%D8%B4%D9%88%DB%8C%DB%8C",
+    "retrieved_at": "2026-10-12T19:32:28.220884Z"
+  },
+  "environment": "local workspace, not Render",
+  "search": {
+    "source_url": "https://api.digikala.com/v1/search/?q=%D9%85%D8%A7%D8%B4%DB%8C%D9%86+%D9%84%D8%A8%D8%A7%D8%B3%D8%B4%D9%88%DB%8C%DB%8C&page=1&category_id=5804",
+    "retrieved_at": "2026-10-12T19:32:30.111421+00:00",
+    "returned_products": 20,
+    "title_examples": [
+      "ماشین لباسشویی 6 کیلوگرم اتوماتیک ایکس ویژن مدل TE62-AW/AS",
+      "ماشین لباسشویی 7 کیلوگرم اتوماتیک پاکشوما مدل TLX 7001 W",
+      "ماشین لباسشویی 7 اتوماتیک ایکس ویژن مدل TG72-BW/BS"
+    ]
+  }
+}

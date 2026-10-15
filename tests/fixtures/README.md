@@ -1,0 +1,1 @@
+These are synthetic, parser-focused fixtures based on the documented field shapes in the local Digikala research. They are not recorded successful live responses. No commenter names or profiles are stored. The phase-0 probe captures sanitized live fixtures on an accessible host; deployment acceptance remains pending until those fixtures and an access report exist.

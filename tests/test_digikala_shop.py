@@ -144,7 +144,12 @@ def test_digikala_only_suggestions_and_recommendations() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/v1/autocomplete/":
             return _response(
-                {"auto_complete": [{"keyword": "لپ تاپ لنوو"}, {"keyword": "لپ تاپ ایسوس"}]}
+                {
+                    "auto_complete": [
+                        {"keyword": "لپ تاپ لنوو"},
+                        {"keyword": "لپ تاپ ایسوس"},
+                    ]
+                }
             )
         assert request.url.path == "/v1/product/123/tabular-recommendation/"
         return _response(
@@ -187,3 +192,22 @@ def test_invalid_product_id_is_rejected_before_request() -> None:
                 await DigikalaShop(client).get_product_details("../123")
 
     asyncio.run(run())
+
+
+def test_recorded_autocomplete_maps_nested_category_identity():
+    import json
+    from pathlib import Path
+
+    from shopping_mcp.infrastructure.shops.digikala.mapping import category_suggestions
+
+    payload = json.loads(
+        (
+            Path(__file__).parents[1] / "docs/evidence/live-check/autocomplete.json"
+        ).read_text()
+    )
+    categories = category_suggestions(payload["data"])
+    assert len(categories) == 1
+    assert categories[0].id == 18
+    assert categories[0].title == "لپ تاپ و الترابوک"
+    assert len(categories[0].keywords) == 5
+    assert "laptop gaming" in categories[0].keywords

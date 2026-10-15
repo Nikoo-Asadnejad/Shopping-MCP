@@ -1,0 +1,123 @@
+{
+  "observed_at": "2026-10-15T11:08:55.637665+00:00",
+  "scope": "Six-tool MCP implementation and phase-2 hosting code; no public deployment or mobile acceptance claimed",
+  "pytest": {
+    "passed": 90,
+    "skipped": 1,
+    "skipped_reason": "Live test requires SHOPPING_MCP_LIVE=1; the same five-family probe was run separately and passed"
+  },
+  "ruff_check": "passed",
+  "ruff_format_check": "passed",
+  "git_diff_check": "passed",
+  "uv_lock_check": "passed",
+  "build": {
+    "wheel": "passed",
+    "source_distribution": "passed",
+    "artifacts": "/tmp/shopping-mcp-dist"
+  },
+  "versions": {
+    "fastmcp": "4.1.0",
+    "mcp": "2.3.0",
+    "fastapi": "0.143.1",
+    "httpx": "0.28.1",
+    "pydantic": "2.14.1"
+  },
+  "fastmcp_client": {
+    "in_process": "six tools, strict validation, errors and shared-client lifecycle passed",
+    "stdio_subprocess": "discovery, fixture call and invalid-input error passed",
+    "http_asgi": "six authenticated calls, auth rejection, no token forwarding, public health/privacy, body bounds, origin rejection and outage tool error passed"
+  },
+  "inspector": {
+    "version": "2.11.0",
+    "node": "24.19.0",
+    "data_source": "offline synthetic fixtures; never used as production fallback",
+    "stdio_discovery": "passed",
+    "http_after_restart": {
+      "legacy/discovery": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "legacy/search_products": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "legacy/get_product_details": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "legacy/compare_products": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "legacy/summarize_reviews": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "legacy/find_best_match": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "legacy/suggest_searches": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "legacy/invalid_input": {
+        "passed": true,
+        "exit_code": 5
+      },
+      "modern/discovery": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "modern/search_products": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "modern/get_product_details": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "modern/compare_products": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "modern/summarize_reviews": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "modern/find_best_match": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "modern/suggest_searches": {
+        "passed": true,
+        "exit_code": 0
+      },
+      "modern/invalid_input": {
+        "passed": true,
+        "exit_code": 5
+      }
+    },
+    "invalid_input_exit_code": 5
+  },
+  "recorded_fixture_mapping": "All five 2026-10-15 sanitized live response families replayed through production adapter in offline tests",
+  "live_access": {
+    "passed": true,
+    "requests": 5,
+    "report": "implementation-live/access-report.json",
+    "location_verified": false,
+    "render_access_verified": false
+  },
+  "remaining_acceptance": [
+    "Actual Render deployment and region access",
+    "Full hosted-usage terms/access review",
+    "Intended GUI/ChatGPT account and phone in Iran",
+    "Typical and cold-start latency on that phone",
+    "Live filter semantics and complete shopper-facing acceptance"
+  ],
+  "conditional_future_work": [
+    "Custom GPT Actions routes only if MCP delivery fails",
+    "Phase 3 capabilities after usage demonstrates value",
+    "Phase 4 additional-store adapter and matching evidence"
+  ]
+}

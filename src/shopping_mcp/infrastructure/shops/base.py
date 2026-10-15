@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 
 from shopping_mcp.domain.product import ProductDetails, SearchPage
+from shopping_mcp.domain.product.search_filters import SearchFilters
 from shopping_mcp.domain.review import ReviewPage
 
 
@@ -13,7 +14,9 @@ class Shop(ABC):
         """Stable identifier for the store."""
 
     @abstractmethod
-    async def search_products(self, query: str, page: int = 1) -> SearchPage:
+    async def search_products(
+        self, query: str, page: int = 1, filters: SearchFilters | None = None
+    ) -> SearchPage:
         """Find products by query."""
 
     @abstractmethod

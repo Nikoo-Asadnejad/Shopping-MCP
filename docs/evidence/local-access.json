@@ -1,0 +1,11 @@
+{
+  "observed_date": "2026-10-12",
+  "environment": "local development workspace; geographic location unverified",
+  "endpoint": "https://api.digikala.com/v1/search/?q=laptop&page=1",
+  "http_status": 307,
+  "location": "https://api.digikala.com/v1/search/?q=laptop&page=1",
+  "json_response": false,
+  "result": "unavailable; redirect not followed",
+  "remaining_endpoint_families": "not checked after redirected access",
+  "render_access_verified": false
+}

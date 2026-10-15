@@ -1,233 +1,258 @@
-"""Read-only access to Digikala's undocumented web API."""
+"""One paced async client for Digikala's read-only, undocumented web API."""
 
-from datetime import datetime, timezone
+import asyncio
+from collections import OrderedDict
+from datetime import UTC, datetime
+from functools import wraps
+from time import monotonic
 from typing import Any
 
 import httpx
+from pydantic import ValidationError
 
-from shopping_mcp.domain.product import (
-    Offer,
-    ProductDetails,
-    ProductSummary,
-    SearchPage,
-    Specification,
-)
-from shopping_mcp.domain.review import Review, ReviewPage
+from shopping_mcp.domain.errors import ShoppingError
+from shopping_mcp.domain.product import ProductDetails, ProductSummary, SearchPage
+from shopping_mcp.domain.product.reference import product_id as parse_product_id
+from shopping_mcp.domain.product.search_filters import SearchFilters
+from shopping_mcp.domain.product.search_suggestions import SearchSuggestions
+from shopping_mcp.domain.review import ReviewPage
 from shopping_mcp.infrastructure.shops.base import Shop
 
+from . import mapping
+
+ShopApiError = ShoppingError  # Backward-compatible import for adapter users.
 _API_URL = "https://api.digikala.com"
-_PRODUCT_URL = "https://www.digikala.com"
 _TIMEOUT = httpx.Timeout(10.0, connect=5.0)
 
 
-class ShopApiError(Exception):
-    def __init__(self, message: str, status_code: int | None = None) -> None:
-        super().__init__(message)
-        self.status_code = status_code
+def _cached_read(operation):
+    """Cache only successfully mapped, bounded snapshots, retaining freshness."""
+
+    @wraps(operation)
+    async def read(self, *args, **kwargs):
+        now = monotonic()
+        for key, (expires, _) in list(self._cache.items()):
+            if expires <= now:
+                del self._cache[key]
+        # bool/float compare equal to integers in Python; keep their types in
+        # the key so a hit cannot bypass the operation's input validation.
+        key = (
+            operation.__name__,
+            tuple((type(value), value) for value in args),
+            tuple((name, type(value), value) for name, value in sorted(kwargs.items())),
+        )
+        try:
+            hash(key)
+        except TypeError:
+            return await operation(self, *args, **kwargs)
+        if key in self._cache:
+            self._cache.move_to_end(key)
+            return self._cache[key][1]
+        result = await operation(self, *args, **kwargs)
+        if self._cache_ttl:
+            self._cache[key] = (monotonic() + self._cache_ttl, result)
+            self._cache.move_to_end(key)
+            while len(self._cache) > self._cache_size:
+                self._cache.popitem(last=False)
+        return result
+
+    return read
 
 
 class DigikalaShop(Shop):
-    """Map Digikala API responses to store-neutral models.
+    """Caller owns the shared client and closes it at service shutdown.
 
-    The caller owns the shared AsyncClient and closes it at application shutdown.
+    Default: at most 3 concurrent requests, one start per second, and one retry
+    for network failures or 502/503/504. No retries for denial or rate limits.
     """
 
-    def __init__(self, client: httpx.AsyncClient) -> None:
+    def __init__(
+        self,
+        client: httpx.AsyncClient,
+        *,
+        request_interval: float = 1.0,
+        concurrency: int = 3,
+        cache_ttl: float = 30.0,
+        cache_size: int = 128,
+    ):
+        if request_interval < 0 or concurrency < 1 or cache_ttl < 0 or cache_size < 1:
+            raise ValueError("invalid request limits")
         self._client = client
+        self._interval = request_interval
+        self._semaphore = asyncio.Semaphore(concurrency)
+        self._pace_lock = asyncio.Lock()
+        self._next_request = 0.0
+        self._cache_ttl = cache_ttl
+        self._cache_size = cache_size
+        self._cache: OrderedDict[tuple, tuple[float, Any]] = OrderedDict()
 
     @property
     def name(self) -> str:
         return "digikala"
 
-    async def search_products(self, query: str, page: int = 1) -> SearchPage:
-        if not query.strip() or len(query) > 200:
-            raise ValueError("query must contain 1 to 200 characters")
+    @_cached_read
+    async def search_products(
+        self, query: str, page: int = 1, filters: SearchFilters | None = None
+    ) -> SearchPage:
+        self._validate_query(query)
         self._validate_page(page)
-        data = await self._get("/v1/search/", params={"q": query.strip(), "page": page})
-        products = self._require_list(data, "products")
-        pager = self._require_dict(data, "pager")
-        retrieved_at = datetime.now(timezone.utc)
-        return SearchPage(
-            page=page,
-            total_pages=int(pager.get("total_pages") or 0),
-            total_items=int(pager.get("total_items") or 0),
-            products=tuple(self._product(item, retrieved_at) for item in products),
-        )
+        filters = filters or SearchFilters()
+        params: dict[str, Any] = {"q": query.strip(), "page": page}
+        if filters.min_price_toman is not None:
+            params["price[min]"] = filters.min_price_toman * 10
+        if filters.max_price_toman is not None:
+            params["price[max]"] = filters.max_price_toman * 10
+        if filters.brand_id:
+            params["brands[0]"] = filters.brand_id
+        if filters.category_id:
+            params["category_id"] = filters.category_id
+        if filters.available_only:
+            params["has_selling_stock"] = 1
+        data = await self._get("/v1/search/", params)
 
-    async def get_product_details(self, product_id: int | str) -> ProductDetails:
-        digikala_id = self._validate_product_id(product_id)
-        data = await self._get(f"/v2/product/{digikala_id}/")
-        product = self._require_dict(data, "product")
-        summary = self._product(product, datetime.now(timezone.utc))
-        specifications = tuple(
-            Specification(
-                group=group.get("title") or "",
-                name=attribute.get("title") or "",
-                values=tuple(attribute.get("values") or ()),
+        return self._parse(
+            lambda: mapping.search_page(
+                data,
+                page,
+                str(httpx.URL(f"{_API_URL}/v1/search/", params=params)),
+                datetime.now(UTC),
             )
-            for group in product.get("specifications") or ()
-            for attribute in group.get("attributes") or ()
-        )
-        offers = tuple(self._offer(variant) for variant in product.get("variants") or ())
-        overview = product.get("comments_overview") or {}
-        return ProductDetails(
-            **summary.model_dump(),
-            specifications=specifications,
-            offers=offers,
-            buyer_overview=overview.get("overview"),
-            buyer_advantages=tuple(overview.get("advantages") or ()),
-            buyer_disadvantages=tuple(overview.get("disadvantages") or ()),
         )
 
+    @_cached_read
+    async def get_product_details(self, product_id: int | str) -> ProductDetails:
+        identifier = parse_product_id(product_id)
+        data = await self._get(f"/v2/product/{identifier}/")
+        details = self._parse(
+            lambda: mapping.details(
+                mapping.require_dict(data, "product"), datetime.now(UTC)
+            )
+        )
+        if details.id != identifier:
+            raise mapping.changed("returned product ID does not match the request")
+        return details
+
+    @_cached_read
     async def get_reviews(self, product_id: int | str, page: int = 1) -> ReviewPage:
-        digikala_id = self._validate_product_id(product_id)
+        identifier = parse_product_id(product_id)
         self._validate_page(page)
-        data = await self._get(f"/v1/product/{digikala_id}/comments/", params={"page": page})
-        comments = self._require_list(data, "comments")
-        pager = self._require_dict(data, "pager")
-        return ReviewPage(
-            page=page,
-            total_pages=int(pager.get("total_pages") or 0),
-            total_items=int(pager.get("total_items") or 0),
-            reviews=tuple(
-                Review(
-                    id=str(item["id"]),
-                    body=item.get("body") or "",
-                    rating_stars=item.get("rate") or None,
-                    is_buyer=bool(item.get("is_buyer")),
-                    advantages=tuple(item.get("advantages") or ()),
-                    disadvantages=tuple(item.get("disadvantages") or ()),
-                )
-                for item in comments
-            ),
+        data = await self._get(f"/v1/product/{identifier}/comments/", {"page": page})
+
+        return self._parse(
+            lambda: mapping.review_page(data, identifier, page, datetime.now(UTC))
+        )
+
+    @_cached_read
+    async def get_search_suggestions(self, query: str) -> SearchSuggestions:
+        self._validate_query(query)
+        query = query.strip()
+        data = await self._get("/v1/autocomplete/", {"q": query})
+
+        return self._parse(
+            lambda: mapping.search_suggestions(
+                data,
+                str(httpx.URL(f"{_API_URL}/v1/autocomplete/", params={"q": query})),
+                datetime.now(UTC),
+            )
         )
 
     async def suggest_searches(self, query: str) -> tuple[str, ...]:
-        if not query.strip() or len(query) > 200:
-            raise ValueError("query must contain 1 to 200 characters")
-        data = await self._get("/v1/autocomplete/", params={"q": query.strip()})
-        return tuple(
-            item["keyword"]
-            for item in self._require_list(data, "auto_complete")
-            if isinstance(item, dict) and item.get("keyword")
-        )
+        return (await self.get_search_suggestions(query)).suggestions
 
-    async def get_recommendations(self, product_id: int | str) -> tuple[ProductSummary, ...]:
-        digikala_id = self._validate_product_id(product_id)
-        data = await self._get(f"/v1/product/{digikala_id}/tabular-recommendation/")
-        recommendations = self._require_dict(data, "data")
-        retrieved_at = datetime.now(timezone.utc)
-        return tuple(
-            self._product(item, retrieved_at)
-            for item in self._require_list(recommendations, "products")
-        )
+    @_cached_read
+    async def get_recommendations(
+        self, product_id: int | str
+    ) -> tuple[ProductSummary, ...]:
+        identifier = parse_product_id(product_id)
+        data = await self._get(f"/v1/product/{identifier}/tabular-recommendation/")
 
-    async def _get(self, path: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+        return self._parse(lambda: mapping.recommendations(data, datetime.now(UTC)))
+
+    @staticmethod
+    def _parse(parser):
         try:
-            response = await self._client.get(
-                f"{_API_URL}{path}", params=params, timeout=_TIMEOUT
-            )
-            response.raise_for_status()
-        except httpx.HTTPStatusError as exc:
-            raise ShopApiError("Digikala request failed", exc.response.status_code) from exc
-        except httpx.RequestError as exc:
-            raise ShopApiError("Digikala is unavailable") from exc
+            return parser()
+        except (
+            ValidationError,
+            TypeError,
+            ValueError,
+            KeyError,
+            AttributeError,
+        ) as exc:
+            raise mapping.changed("invalid field shape or value") from exc
 
+    async def _paced_get(self, path: str, params: dict | None) -> httpx.Response:
+        async with self._semaphore:
+            async with self._pace_lock:
+                await asyncio.sleep(max(0, self._next_request - monotonic()))
+                self._next_request = monotonic() + self._interval
+            return await self._client.get(
+                f"{_API_URL}{path}",
+                params=params,
+                timeout=_TIMEOUT,
+                follow_redirects=False,
+            )
+
+    async def _get(
+        self, path: str, params: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        response = None
+        for attempt in range(2):
+            try:
+                response = await self._paced_get(path, params)
+            except httpx.RequestError as exc:
+                if attempt == 0:
+                    await asyncio.sleep(0.25)
+                    continue
+                raise ShoppingError(
+                    "Digikala is unavailable; try again later", "unavailable"
+                ) from exc
+            if response.status_code in {502, 503, 504} and attempt == 0:
+                await asyncio.sleep(0.25)
+                continue
+            break
+        self._check_status(response.status_code)
         try:
             payload = response.json()
         except ValueError as exc:
-            raise ShopApiError("Digikala returned invalid JSON") from exc
-        if not isinstance(payload, dict) or payload.get("status") != 200:
-            status = payload.get("status") if isinstance(payload, dict) else None
-            status = status if isinstance(status, int) else None
-            raise ShopApiError("Digikala returned an unexpected response", status)
-        data = payload.get("data")
-        if not isinstance(data, dict):
-            raise ShopApiError("Digikala response is missing data")
-        return data
+            raise mapping.changed("invalid JSON") from exc
+        if not isinstance(payload, dict):
+            raise mapping.changed("missing response envelope")
+        status = payload.get("status")
+        if status != 200:
+            if isinstance(status, int):
+                self._check_status(status)
+            raise mapping.changed("unexpected body status")
+        return mapping.require_dict(payload, "data")
 
     @staticmethod
-    def _product(product: dict[str, Any], retrieved_at: datetime) -> ProductSummary:
-        variant = product.get("default_variant") or {}
-        rating = product.get("rating") or {}
-        count = int(rating.get("count") or 0)
-        uri = (product.get("url") or {}).get("uri")
-        if not isinstance(uri, str) or not uri.startswith("/product/"):
-            raise ShopApiError("Digikala product URL is missing or invalid")
-        price = DigikalaShop._price_toman((variant.get("price") or {}).get("selling_price"))
-        if "id" not in product:
-            raise ShopApiError("Digikala product ID is missing")
-        rate = rating.get("rate")
-        if count and rate is None:
-            raise ShopApiError("Digikala product rating is missing")
-        return ProductSummary(
-            shop="digikala",
-            id=str(product["id"]),
-            title=product.get("title_fa") or "",
-            url=f"{_PRODUCT_URL}{uri}",
-            available=product.get("status") == "marketable" and price is not None,
-            price_toman=price,
-            rating_stars=round(float(rate) / 20, 1) if count else None,
-            rating_count=count,
-            retrieved_at=retrieved_at,
+    def _check_status(status: int):
+        if status == 200:
+            return
+        if status == 404:
+            raise ShoppingError("Product or endpoint not found", "not_found", status)
+        if status == 429:
+            raise ShoppingError(
+                "Digikala rate limited this request; wait before trying again",
+                "rate_limited",
+                status,
+            )
+        if status in {301, 302, 303, 307, 308, 401, 403}:
+            raise ShoppingError(
+                "Digikala denied or redirected access; check the source page",
+                "unavailable",
+                status,
+            )
+        raise ShoppingError(
+            "Digikala is unavailable; try again later", "unavailable", status
         )
 
     @staticmethod
-    def _offer(variant: dict[str, Any]) -> Offer:
-        if "id" not in variant:
-            raise ShopApiError("Digikala variant ID is missing")
-        seller = variant.get("seller") or {}
-        color = variant.get("color") or {}
-        warranty = variant.get("warranty") or {}
-        return Offer(
-            variant_id=str(variant["id"]),
-            seller=seller.get("title"),
-            price_toman=DigikalaShop._price_toman(
-                (variant.get("price") or {}).get("selling_price")
-            ),
-            available=variant.get("status") == "marketable",
-            color=color.get("title"),
-            warranty=warranty.get("title_fa"),
-        )
+    def _validate_query(query: str):
+        if not isinstance(query, str) or not query.strip() or len(query) > 200:
+            raise ValueError("query must contain 1 to 200 characters")
 
     @staticmethod
-    def _price_toman(price_rial: int | None) -> int | None:
-        if price_rial is None:
-            return None
-        if not isinstance(price_rial, int) or isinstance(price_rial, bool) or price_rial < 0:
-            raise ShopApiError("Digikala price is invalid")
-        toman, remainder = divmod(price_rial, 10)
-        if remainder:
-            raise ShopApiError("Digikala price cannot be represented as whole toman")
-        return toman
-
-    @staticmethod
-    def _require_dict(data: dict[str, Any], key: str) -> dict[str, Any]:
-        value = data.get(key)
-        if not isinstance(value, dict):
-            raise ShopApiError(f"Digikala response is missing {key}")
-        return value
-
-    @staticmethod
-    def _require_list(data: dict[str, Any], key: str) -> list[dict[str, Any]]:
-        value = data.get(key)
-        if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
-            raise ShopApiError(f"Digikala response is missing {key}")
-        return value
-
-    @staticmethod
-    def _validate_product_id(product_id: int | str) -> int:
-        if isinstance(product_id, bool):
-            raise ValueError("product_id must be a positive Digikala ID")
-        if isinstance(product_id, str):
-            if not product_id.isascii() or not product_id.isdecimal():
-                raise ValueError("product_id must be a positive Digikala ID")
-            product_id = int(product_id)
-        if not isinstance(product_id, int) or product_id <= 0:
-            raise ValueError("product_id must be a positive Digikala ID")
-        return product_id
-
-    @staticmethod
-    def _validate_page(page: int) -> None:
-        if not isinstance(page, int) or isinstance(page, bool) or page <= 0:
-            raise ValueError("page must be a positive integer")
+    def _validate_page(page: int):
+        if isinstance(page, bool) or not isinstance(page, int) or not 1 <= page <= 100:
+            raise ValueError("page must be an integer from 1 to 100")

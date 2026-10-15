@@ -1,0 +1,19 @@
+{
+  "status": 200,
+  "data": {
+    "auto_complete": [
+      {
+        "keyword": "لپ تاپ لنوو"
+      },
+      {
+        "keyword": "لپ تاپ ایسوس"
+      }
+    ],
+    "categories": [
+      {
+        "id": 18,
+        "title_fa": "لپ تاپ"
+      }
+    ]
+  }
+}

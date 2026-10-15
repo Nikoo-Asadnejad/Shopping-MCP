@@ -1,5 +1,7 @@
 """A page of reviews for one product."""
 
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from .review import Review
@@ -11,4 +13,5 @@ class ReviewPage(BaseModel):
     page: int = Field(ge=1)
     total_pages: int = Field(ge=0)
     total_items: int = Field(ge=0)
+    retrieved_at: datetime | None = None
     reviews: tuple[Review, ...]

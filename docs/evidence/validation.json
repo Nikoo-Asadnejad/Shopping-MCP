@@ -1,0 +1,29 @@
+{
+  "observed_date": "2026-10-12",
+  "offline_fixture_provenance": "Synthetic field-shape fixtures, not recorded successful live responses",
+  "pytest": {
+    "passed": 61
+  },
+  "ruff_check": "passed",
+  "ruff_format_check": "passed",
+  "git_diff_check": "passed",
+  "uv_lock_check": "passed",
+  "fastmcp_client": {
+    "in_process": "discovery, six valid calls, invalid inputs and upstream tool errors passed",
+    "stdio_subprocess": "discovery, fixture suggestion and invalid-input error passed",
+    "streamable_http_loopback": "discovery, all six fixture calls and invalid-input error passed"
+  },
+  "inspector": {
+    "passed": false,
+    "latest_attempt": "dependency download timed out; retry then failed on a missing client module",
+    "earlier_release_attempt": "stopped during slow dependency installation; no successful Inspector discovery/calls claimed"
+  },
+  "live_acceptance": {
+    "digikala": "Latest local check: HTTP/body 200 for all five endpoint families; representative adapter parsing passed. Earlier search returned HTTP 307.",
+    "render_frankfurt": "pending actual account/service",
+    "chatgpt_mobile_in_iran": "pending actual account/phone",
+    "hosted_usage_terms": "unresolved",
+    "local_api_report": "live-check/access-report.json"
+  },
+  "category_resolution": "Dynamic store category IDs replace fixed aliases; nested recorded autocomplete mapping, arbitrary categories, ambiguity, missing hints and explicit selection are covered."
+}

@@ -1,0 +1,58 @@
+{
+  "status": 200,
+  "data": {
+    "categories": [
+      {
+        "keyword": "laptop gaming",
+        "category": {
+          "id": 18,
+          "title_fa": "لپ تاپ و الترابوک",
+          "title_en": "لپ تاپ و الترابوک"
+        }
+      },
+      {
+        "keyword": "laptop asus",
+        "category": {
+          "id": 18,
+          "title_fa": "لپ تاپ و الترابوک",
+          "title_en": "لپ تاپ و الترابوک"
+        }
+      },
+      {
+        "keyword": "laptop lenovo",
+        "category": {
+          "id": 18,
+          "title_fa": "لپ تاپ و الترابوک",
+          "title_en": "لپ تاپ و الترابوک"
+        }
+      },
+      {
+        "keyword": "laptop hp",
+        "category": {
+          "id": 18,
+          "title_fa": "لپ تاپ و الترابوک",
+          "title_en": "لپ تاپ و الترابوک"
+        }
+      },
+      {
+        "keyword": "surface laptop studio 2",
+        "category": {
+          "id": 18,
+          "title_fa": "لپ تاپ و الترابوک",
+          "title_en": "لپ تاپ و الترابوک"
+        }
+      }
+    ],
+    "auto_complete": [
+      {
+        "keyword": "surface laptop"
+      },
+      {
+        "keyword": "surface laptop 4"
+      },
+      {
+        "keyword": "surface laptop studio"
+      }
+    ]
+  }
+}

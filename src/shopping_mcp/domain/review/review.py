@@ -8,7 +8,9 @@ class Review(BaseModel):
 
     id: str
     body: str
-    rating_stars: int | None = Field(default=None, ge=1, le=5)
-    is_buyer: bool
+    rating_stars: int | None = Field(default=None, ge=1, le=5, strict=True)
+    is_buyer: bool = Field(strict=True)
+    source_url: str | None = None
+    title: str = ""
     advantages: tuple[str, ...] = ()
     disadvantages: tuple[str, ...] = ()

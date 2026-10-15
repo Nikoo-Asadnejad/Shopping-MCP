@@ -11,4 +11,5 @@ class Offer(BaseModel):
     price_toman: int | None = Field(default=None, ge=0)
     available: bool
     color: str | None
+    size: str | None = None
     warranty: str | None

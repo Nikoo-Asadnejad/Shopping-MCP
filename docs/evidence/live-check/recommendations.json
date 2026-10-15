@@ -1,0 +1,730 @@
+{
+  "status": 200,
+  "data": {
+    "data": {
+      "title": "کالاهای مشابه",
+      "products": [
+        {
+          "id": 14026366,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G2 IJL با پردازنده Celeron N4500، رم DDR4 8GB با فرکانس 2933MHz، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN با وضوح Full HD، کاستوم شده",
+          "title_en": "Lenovo V15 G2 IJL-Celeron N4500-8GB DDR4 2933MHz-256GB SSD-TN 15.6 Inch Laptop - Customized",
+          "url": {
+            "uri": "/product/dkp-14026366/لپتاپ-لنوو-مدل-v15-g2-ijl-با-پردازنده-celeron-n4500-رم-ddr4-8gb-با-فرکانس-2933mhz-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd-کاستوم-شده"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 87.19,
+            "count": 139
+          },
+          "default_variant": {
+            "id": 48344307,
+            "rate": 90.8,
+            "status": "marketable",
+            "warranty": {
+              "id": 9457,
+              "title_fa": "گارانتی 18 ماهه دیبا کام پردازش سدرا",
+              "title_en": "گارانتی 18 ماهه دیبا کام پردازش سدرا"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 8977,
+              "title": "آی تی صنف",
+              "url": "https://www.digikala.com/seller/5AJH7/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 995000000
+            }
+          }
+        },
+        {
+          "id": 14026373,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G2 IJL با پردازنده Celeron N4500، رم DDR4 8GB با فرکانس 2933MHz، حافظه SSD با ظرفیت 512GB، نمایشگر 15.6 اینچ TN با وضوح Full HD، کاستوم شده",
+          "title_en": "Lenovo V15 G2 IJL-Celeron N4500-8GB DDR4-512GB SSD-TN 15.6 Inch Laptop - Customized",
+          "url": {
+            "uri": "/product/dkp-14026373/لپتاپ-لنوو-مدل-v15-g2-ijl-با-پردازنده-celeron-n4500-رم-ddr4-8gb-با-فرکانس-2933mhz-حافظه-ssd-با-ظرفیت-512gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd-کاستوم-شده"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 84.63,
+            "count": 108
+          },
+          "default_variant": {
+            "id": 52108578,
+            "rate": 100,
+            "status": "marketable",
+            "warranty": {
+              "id": 6829,
+              "title_fa": "گارانتی 18 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 18 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1009000000
+            }
+          }
+        },
+        {
+          "id": 16228820,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G4 IRU با پردازنده Core i3-1315U، رم DDR4 8GB با فرکانس 3200MHz، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN با وضوح Full HD",
+          "title_en": "Lenovo V15 G4 IRU-i3 1315U-8GB DDR4 3200MHz-256GB SSD-TN 15.6 Inch Laptop",
+          "url": {
+            "uri": "/product/dkp-16228820/لپتاپ-لنوو-مدل-v15-g4-iru-با-پردازنده-core-i3-1315u-رم-ddr4-8gb-با-فرکانس-3200mhz-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 88.14,
+            "count": 113
+          },
+          "default_variant": {
+            "id": 62471685,
+            "rate": 0,
+            "status": "marketable",
+            "warranty": {
+              "id": 309,
+              "title_fa": "گارانتی 24 ماهه سریر",
+              "title_en": "گارانتی 24 ماهه سریر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 1036469,
+              "title": "آی تی لند بیست و چهار",
+              "url": "https://www.digikala.com/seller/EPP72/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1279000000
+            }
+          }
+        },
+        {
+          "id": 14026353,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G2 IJL با پردازنده Celeron N4500، رم DDR4 4GB با فرکانس 2933MHz، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN با وضوح Full HD",
+          "title_en": "Lenovo V15 G2 IJL-Celeron N4500-4GB DDR4-256GB SSD-TN 15.6 Inch Laptop",
+          "url": {
+            "uri": "/product/dkp-14026353/لپتاپ-لنوو-مدل-v15-g2-ijl-با-پردازنده-celeron-n4500-رم-ddr4-4gb-با-فرکانس-2933mhz-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 83.11,
+            "count": 212
+          },
+          "default_variant": {
+            "id": 52122974,
+            "rate": 86.6,
+            "status": "marketable",
+            "warranty": {
+              "id": 6829,
+              "title_fa": "گارانتی 18 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 18 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 925500000
+            }
+          }
+        },
+        {
+          "id": 14127036,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G2 IJL با پردازنده Celeron N4500، رم DDR4 16GB با فرکانس 2933MHz، حافظه SSD با ظرفیت 512GB، نمایشگر 15.6 اینچ TN با وضوح Full HD، کاستوم شده",
+          "title_en": "Lenovo V15 G2 IJL-Celeron N4500-16GB DDR4-512GB SSD-TN 15.6 Inch Laptop - Customized",
+          "url": {
+            "uri": "/product/dkp-14127036/لپتاپ-لنوو-مدل-v15-g2-ijl-با-پردازنده-celeron-n4500-رم-ddr4-16gb-با-فرکانس-2933mhz-حافظه-ssd-با-ظرفیت-512gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd-کاستوم-شده"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 81.3,
+            "count": 77
+          },
+          "default_variant": {
+            "id": 52202108,
+            "rate": 77.4,
+            "status": "marketable",
+            "warranty": {
+              "id": 8901,
+              "title_fa": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1169000000
+            }
+          }
+        },
+        {
+          "id": 12117030,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G4 AMN با پردازنده Athlon Silver 7120U، رم LPDDR5 8GB، حافظه SSD با ظرفیت 512GB، نمایشگر 15.6 اینچ TN با وضوح Full HD، به همراه ماوس، کاستوم شده",
+          "title_en": "Lenovo V15 G4 AMN-Athlon Silver 7120U 8GB 512SSD 15.6 Inch Laptop - Customized",
+          "url": {
+            "uri": "/product/dkp-12117030/لپتاپ-لنوو-مدل-v15-g4-amn-با-پردازنده-athlon-silver-7120u-رم-lpddr5-8gb-حافظه-ssd-با-ظرفیت-512gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd-به-همراه-ماوس-کاستوم-شده"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 79.09,
+            "count": 154
+          },
+          "default_variant": {
+            "id": 52346024,
+            "rate": 90,
+            "status": "marketable",
+            "warranty": {
+              "id": 8901,
+              "title_fa": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1174000000
+            }
+          }
+        },
+        {
+          "id": 12116861,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G4 AMN با پردازنده Athlon Silver-7120U، رم LPDDR5 8GB، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN با وضوح Full HD",
+          "title_en": "Lenovo V15 G4 AMN-Athlon Silver 7120U-8GB LPDDR5-256GB SSD-TN 15.6 Inch Laptop",
+          "url": {
+            "uri": "/product/dkp-12116861/لپتاپ-لنوو-مدل-v15-g4-amn-با-پردازنده-athlon-silver-7120u-رم-lpddr5-8gb-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 82.66,
+            "count": 308
+          },
+          "default_variant": {
+            "id": 52345908,
+            "rate": 85,
+            "status": "marketable",
+            "warranty": {
+              "id": 8901,
+              "title_fa": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1099000000
+            }
+          }
+        },
+        {
+          "id": 16229185,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G4 IRU با پردازنده Core i3-1315U، رم DDR4 16GB با فرکانس 3200MHz، حافظه SSD با ظرفیت 512GB، نمایشگر 15.6 اینچ TN با وضوح Full HD، کاستوم شده",
+          "title_en": "Lenovo V15 G4 IRU-i3 1315U-16GB DDR4 3200MHz-512GB SSD-TN 15.6 Inch Laptop - Customized",
+          "url": {
+            "uri": "/product/dkp-16229185/لپتاپ-لنوو-مدل-v15-g4-iru-با-پردازنده-core-i3-1315u-رم-ddr4-16gb-با-فرکانس-3200mhz-حافظه-ssd-با-ظرفیت-512gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd-کاستوم-شده"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 91.69,
+            "count": 65
+          },
+          "default_variant": {
+            "id": 56445680,
+            "rate": 94,
+            "status": "marketable",
+            "warranty": {
+              "id": 8901,
+              "title_fa": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1486000000
+            }
+          }
+        },
+        {
+          "id": 13278622,
+          "title_fa": "لپ‌تاپ لنوو مدل IdeaPad Slim 3 15IRH8 با پردازنده Core i5-13420H، رم LPDDR5 8GB با فرکانس 4800MHz، حافظه SSD با ظرفیت 512GB، نمایشگر 15.6 اینچ TN با وضوح Full HD",
+          "title_en": "Lenovo IdeaPad Slim 3 15IRH8-i5 13420H-8GB LPDDR5 4800MHz-512GB SSD-TN 15.6 Inch Laptop",
+          "url": {
+            "uri": "/product/dkp-13278622/لپتاپ-لنوو-مدل-ideapad-slim-3-15irh8-با-پردازنده-core-i5-13420h-رم-lpddr5-8gb-با-فرکانس-4800mhz-حافظه-ssd-با-ظرفیت-512gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 89.31,
+            "count": 275
+          },
+          "default_variant": {
+            "id": 76916685,
+            "rate": 0,
+            "status": "marketable",
+            "warranty": {
+              "id": 5273,
+              "title_fa": "گارانتی 18 ماهه ایراکام",
+              "title_en": "گارانتی 18 ماهه ایراکام"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 1903734,
+              "title": "رایانه نیاز",
+              "url": "https://www.digikala.com/seller/HTGUR/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1480000000
+            }
+          }
+        },
+        {
+          "id": 17840010,
+          "title_fa": "لپ‌تاپ لنوو مدل IdeaPad 1 15IJL7 با پردازنده Celeron N4500، رم DDR4 8GB، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN با وضوح HD",
+          "title_en": "Lenovo Ideapad 1 15IJL7-Celeron N4500-8GB DDR4-256GB SSD-TN 15.6 inch Laptop",
+          "url": {
+            "uri": "/product/dkp-17840010/لپتاپ-لنوو-مدل-ideapad-1-15ijl7-با-پردازنده-celeron-n4500-رم-ddr4-8gb-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn-با-وضوح-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 82.08,
+            "count": 77
+          },
+          "default_variant": {
+            "id": 79721117,
+            "rate": 80,
+            "status": "marketable",
+            "warranty": {
+              "id": 9457,
+              "title_fa": "گارانتی 18 ماهه دیبا کام پردازش سدرا",
+              "title_en": "گارانتی 18 ماهه دیبا کام پردازش سدرا"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 1818298,
+              "title": "امیتاک",
+              "url": "https://www.digikala.com/seller/HGPAC/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 947000000
+            }
+          }
+        },
+        {
+          "id": 16801385,
+          "title_fa": "لپ‌تاپ لنوو مدل IdeaPad Slim 3 15IRU8 با پردازنده Core i3-1315U، رم LPDDR5 8GB با فرکانس 4800MHz، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN با وضوح Full HD",
+          "title_en": "Lenovo IdeaPad Slim 3 15IRU8-i3 1315U-8GB LPDDR5 4800MHz-256GB SSD-TN 15.6 Inch Laptop",
+          "url": {
+            "uri": "/product/dkp-16801385/لپتاپ-لنوو-مدل-ideapad-slim-3-15iru8-با-پردازنده-core-i3-1315u-رم-lpddr5-8gb-با-فرکانس-4800mhz-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 88.82,
+            "count": 553
+          },
+          "default_variant": {
+            "id": 58593836,
+            "rate": 91,
+            "status": "marketable",
+            "warranty": {
+              "id": 9457,
+              "title_fa": "گارانتی 18 ماهه دیبا کام پردازش سدرا",
+              "title_en": "گارانتی 18 ماهه دیبا کام پردازش سدرا"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 8977,
+              "title": "آی تی صنف",
+              "url": "https://www.digikala.com/seller/5AJH7/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1299000000
+            }
+          }
+        },
+        {
+          "id": 18991772,
+          "title_fa": "لپ‌تاپ لنوو مدل IdeaPad 1 15IJL7 با پردازنده Celeron N4500، رم DDR4 8GB با فرکانس 2933MHz، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN با وضوح Full HD",
+          "title_en": "Lenovo IdeaPad 1 15IJL7-Celeron N4500-8GB DDR4 2933MHz-256GB SSD-TN FHD 15.6 inch Laptop",
+          "url": {
+            "uri": "/product/dkp-18991772/لپتاپ-لنوو-مدل-ideapad-1-15ijl7-با-پردازنده-celeron-n4500-رم-ddr4-8gb-با-فرکانس-2933mhz-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 84.79,
+            "count": 213
+          },
+          "default_variant": {
+            "id": 74427908,
+            "rate": 78.4,
+            "status": "marketable",
+            "warranty": {
+              "id": 4590,
+              "title_fa": " گارانتی 18 ماهه دیجی کالا سرویس",
+              "title_en": " گارانتی 18 ماهه دیجی کالا سرویس"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 1,
+              "title": "دیجی‌کالا",
+              "url": "https://www.digikala.com/seller/5A52N/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 930000000
+            }
+          }
+        },
+        {
+          "id": 20276383,
+          "title_fa": "لپ‌تاپ 15.3 اینچی لنوو مدل IdeaPad Slim 3 15IRH10 با پردازنده Core i5-13420H، رم 8 گیگابایت DDR5، حافظه SSD با ظرفیت 512 گیگابایت، نمایشگر WUXGA IPS",
+          "title_en": "Lenovo IdeaPad Slim 3 15IRH10-i5 13420H-8GB DDR5-512GB SSD-IPS 15.3 inch Laptop",
+          "url": {
+            "uri": "/product/dkp-20276383/لپتاپ-153-اینچی-لنوو-مدل-ideapad-slim-3-15irh10-با-پردازنده-core-i5-13420h-رم-8-گیگابایت-ddr5-حافظه-ssd-با-ظرفیت-512-گیگابایت-نمایشگر-wuxga-ips"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 87.01,
+            "count": 134
+          },
+          "default_variant": {
+            "id": 81387087,
+            "rate": 87.6,
+            "status": "marketable",
+            "warranty": {
+              "id": 9732,
+              "title_fa": "گارانتی 18 ماهه شرکتی",
+              "title_en": "گارانتی 18 ماهه شرکتی"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 1,
+              "title": "دیجی‌کالا",
+              "url": "https://www.digikala.com/seller/5A52N/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1489990000
+            }
+          }
+        },
+        {
+          "id": 11096025,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G4 AMN با پردازنده Ryzen 3-7320U، رم LPDDR5 8GB با فرکانس 5500MHz، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN با وضوح Full HD",
+          "title_en": "Lenovo V15 G4 AMN-R3 7320U-8GB LPDDR5-256GB SSD-TN 15.6 Inch Laptop",
+          "url": {
+            "uri": "/product/dkp-11096025/لپتاپ-لنوو-مدل-v15-g4-amn-با-پردازنده-ryzen-3-7320u-رم-lpddr5-8gb-با-فرکانس-5500mhz-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 85.97,
+            "count": 67
+          },
+          "default_variant": {
+            "id": 54172855,
+            "rate": 72,
+            "status": "marketable",
+            "warranty": {
+              "id": 309,
+              "title_fa": "گارانتی 24 ماهه سریر",
+              "title_en": "گارانتی 24 ماهه سریر"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 1036469,
+              "title": "آی تی لند بیست و چهار",
+              "url": "https://www.digikala.com/seller/EPP72/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1165000000
+            }
+          }
+        },
+        {
+          "id": 20124552,
+          "title_fa": "لپ‌تاپ 15.3 اینچی لنوو مدل IdeaPad Slim 3 15IRH10، مجهز به پردازنده Core i7-13620H، رم 16 گیگابایت DDR5، حافظه SSD با ظرفیت 512 گیگابایت، نمایشگر WUXGA با پنل IPS مات، گرافیک UHD",
+          "title_en": "Lenovo IdeaPad Slim 3 15IRH10-i7 13620H-16GB DDR5 4800MHz-512GB SSD-IPS 15.3 inch Laptop",
+          "url": {
+            "uri": "/product/dkp-20124552/لپتاپ-153-اینچی-لنوو-مدل-ideapad-slim-3-15irh10-مجهز-به-پردازنده-core-i7-13620h-رم-16-گیگابایت-ddr5-حافظه-ssd-با-ظرفیت-512-گیگابایت-نمایشگر-wuxga-با-پنل-ips-مات-گرافیک-uhd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 87.6,
+            "count": 129
+          },
+          "default_variant": {
+            "id": 74085227,
+            "rate": 91.4,
+            "status": "marketable",
+            "warranty": {
+              "id": 6829,
+              "title_fa": "گارانتی 18 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 18 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 2125000000
+            }
+          }
+        },
+        {
+          "id": 14198254,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G2 IJL با پردازنده Celeron N4500، رم DDR4 16GB با فرکانس 2933MHz، حافظه SSD با ظرفیت 256GB، نمایشگر 15.6 اینچ TN",
+          "title_en": "Lenovo V15 G2 IJL-Celeron N4500-16GB DDR4 2933MHz-256GB SSD-TN 15.6 Inch Laptop - Customized",
+          "url": {
+            "uri": "/product/dkp-14198254/لپتاپ-لنوو-مدل-v15-g2-ijl-با-پردازنده-celeron-n4500-رم-ddr4-16gb-با-فرکانس-2933mhz-حافظه-ssd-با-ظرفیت-256gb-نمایشگر-156-اینچ-tn"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 81.78,
+            "count": 45
+          },
+          "default_variant": {
+            "id": 52332834,
+            "rate": 84.4,
+            "status": "marketable",
+            "warranty": {
+              "id": 8901,
+              "title_fa": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 24 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1069990000
+            }
+          }
+        },
+        {
+          "id": 12624840,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G4 با پردازنده Ryzen 3-7320U، رم LPDDR5 8GB با فرکانس 4800MHz، حافظه SSD با ظرفیت 512GB، نمایشگر 15.6 اینچ TN با وضوح Full HD، کاستوم شده",
+          "title_en": "Lenovo V15 G4-R3 7320U-8GB LPDDR5-512GB SSD-TN 15.6 Inch Laptop - Customized ",
+          "url": {
+            "uri": "/product/dkp-12624840/لپتاپ-لنوو-مدل-v15-g4-با-پردازنده-ryzen-3-7320u-رم-lpddr5-8gb-با-فرکانس-4800mhz-حافظه-ssd-با-ظرفیت-512gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd-کاستوم-شده"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 90.53,
+            "count": 38
+          },
+          "default_variant": {
+            "id": 49774835,
+            "rate": 90,
+            "status": "marketable",
+            "warranty": {
+              "id": 309,
+              "title_fa": "گارانتی 24 ماهه سریر",
+              "title_en": "گارانتی 24 ماهه سریر"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 1036469,
+              "title": "آی تی لند بیست و چهار",
+              "url": "https://www.digikala.com/seller/EPP72/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1240000000
+            }
+          }
+        },
+        {
+          "id": 16127101,
+          "title_fa": "لپ‌تاپ لنوو مدل V15 G4 IRU با پردازنده Core i5-13420H، رم DDR4 8GB با فرکانس 3200MHz، حافظه SSD با ظرفیت 512GB، نمایشگر 15.6 اینچ TN با وضوح Full HD",
+          "title_en": "Lenovo V15 G4 IRU-i5 13420H-8GB DDR4 3200MHz-512GB SSD-TN 15.6 Inch Laptop",
+          "url": {
+            "uri": "/product/dkp-16127101/لپتاپ-لنوو-مدل-v15-g4-iru-با-پردازنده-core-i5-13420h-رم-ddr4-8gb-با-فرکانس-3200mhz-حافظه-ssd-با-ظرفیت-512gb-نمایشگر-156-اینچ-tn-با-وضوح-full-hd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 84.9,
+            "count": 49
+          },
+          "default_variant": {
+            "id": 57601905,
+            "rate": 76.6,
+            "status": "marketable",
+            "warranty": {
+              "id": 7739,
+              "title_fa": "گارانتی 18 ماهه بانی نو",
+              "title_en": "گارانتی 18 ماهه بانی نو"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 349337,
+              "title": "بانی نو",
+              "url": "https://www.digikala.com/seller/CAJWJ/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1510000000
+            }
+          }
+        },
+        {
+          "id": 17377952,
+          "title_fa": "لپ‌تاپ لنوو مدل LOQ 15IRX9 با پردازنده Core i7-13650HX و گرافیک RTX3050 6GB، حافظه SSD با ظرفیت 512GB، نمایشگر 15.6 اینچ IPS با وضوح Full HD و نرخ به‌روزرسانی 144Hz، دارای نور پس‌زمینه کیبورد",
+          "title_en": "Lenovo LOQ 15IRX9-i7 13650HX-RTX3050 6GB-24GB DDR5 4800MHz-512GB SSD-FHD 144Hz 15.6 inch Laptop",
+          "url": {
+            "uri": "/product/dkp-17377952/لپتاپ-لنوو-مدل-loq-15irx9-با-پردازنده-core-i7-13650hx-و-گرافیک-rtx3050-6gb-حافظه-ssd-با-ظرفیت-512gb-نمایشگر-156-اینچ-ips-با-وضوح-full-hd-و-نرخ-بهروزرسانی-144hz-دارای-نور-پسزمینه-کیبورد"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 91.82,
+            "count": 88
+          },
+          "default_variant": {
+            "id": 72321828,
+            "rate": 93.4,
+            "status": "marketable",
+            "warranty": {
+              "id": 6829,
+              "title_fa": "گارانتی 18 ماهه آرتین تجارت آریا تدبیر",
+              "title_en": "گارانتی 18 ماهه آرتین تجارت آریا تدبیر"
+            },
+            "color": {
+              "id": 11,
+              "title": "خاکستری"
+            },
+            "seller": {
+              "id": 395465,
+              "title": "طرح اندیشان سمت نو",
+              "url": "https://www.digikala.com/seller/CH4KA/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 3529000000
+            }
+          }
+        },
+        {
+          "id": 15050068,
+          "title_fa": "لپ تاپ 15.6 اینچی لنوو مدل V15 G4 AMN-Athlon Silver 7120U 8GB 512SSD",
+          "title_en": "Lenovo V15 G4 AMN-Athlon Silver 7120U 8GB 512SSD 15.6 Inch Laptop",
+          "url": {
+            "uri": "/product/dkp-15050068/لپ-تاپ-156-اینچی-لنوو-مدل-v15-g4-amn-athlon-silver-7120u-8gb-512ssd"
+          },
+          "status": "marketable",
+          "rating": {
+            "rate": 82.19,
+            "count": 73
+          },
+          "default_variant": {
+            "id": 59737215,
+            "rate": 90,
+            "status": "marketable",
+            "warranty": {
+              "id": 309,
+              "title_fa": "گارانتی 24 ماهه سریر",
+              "title_en": "گارانتی 24 ماهه سریر"
+            },
+            "color": {
+              "id": 1,
+              "title": "مشکی"
+            },
+            "seller": {
+              "id": 1036469,
+              "title": "آی تی لند بیست و چهار",
+              "url": "https://www.digikala.com/seller/EPP72/",
+              "rating": {}
+            },
+            "price": {
+              "selling_price": 1172000000
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,10 +1,10 @@
 # Shopping MCP
 
-Shopping MCP is a planned collection of read-only Model Context Protocol (MCP) tools for Iranian online stores. Phase 1 focuses on [Digikala](https://www.digikala.com/); later phases will add other stores so an assistant can compare products across them.
+Shopping MCP provides a collection of read-only Model Context Protocol (MCP) tools for Iranian online stores. Phase 1 focuses on [Digikala](https://www.digikala.com/); later phases will add other stores so an assistant can compare products across them.
 
 The goal is to help people find a product that fits their needs and budget, understand what buyers liked and disliked, and compare current offers without hiding missing or uncertain information.
 
-> **Project status:** Early implementation. The shared shop contract and Digikala API adapter exist, but there is no runnable MCP server or hosted endpoint yet. The remaining sequence is in the [plan](docs/PLAN.md).
+> **Project status:** The six phase-1 tools are implemented with local stdio and Streamable HTTP support, a FastAPI health/privacy surface, bounded caching, traffic limits and optional bearer access. Phase-0 live acceptance is pending: the latest local check succeeded for all five Digikala endpoint families, after an earlier redirect; Render access, hosted-usage terms and ChatGPT mobile MCP/plugin support remain unverified. See the [plan](docs/PLAN.md) and [access checklist](docs/PHASE_0.md).
 
 ## Goals
 
@@ -18,7 +18,7 @@ The goal is to help people find a product that fits their needs and budget, unde
 
 Phase 1 is read-only. Account access, carts, checkout, payments, and a historical price database are outside its scope.
 
-## Planned tools
+## Tools
 
 | Tool | Shopper question it answers |
 | --- | --- |
@@ -29,7 +29,7 @@ Phase 1 is read-only. Account access, carts, checkout, payments, and a historica
 | `find_best_match` | “Which available option best fits my budget and requirements?” |
 | `suggest_searches` | “What should I search for?” |
 
-Results will include source links and retrieval times. Recommendations will distinguish the best-value option from the best-reviewed option when they differ, and explain when the review evidence is too limited for a confident pick.
+Results include source links and retrieval times. Recommendations distinguish the best-value option from the best-reviewed option when they differ, and explain when the review evidence is too limited for a confident pick.
 
 ## Tech stack
 
@@ -39,77 +39,53 @@ Results will include source links and retrieval times. Recommendations will dist
 | [uv](https://docs.astral.sh/uv/) | Dependency management and development commands. |
 | [Pydantic](https://docs.pydantic.dev/) | Validation and typed input/output models. |
 | [FastMCP](https://gofastmcp.com/) | MCP tools and local/remote transports. |
-| [FastAPI](https://fastapi.tiangolo.com/) | A small HTTP API for health checks and GPT Actions if needed. |
+| [FastAPI](https://fastapi.tiangolo.com/) | Health/privacy HTTP surface; Actions fallback remains conditional. |
 | [HTTPX](https://www.python-httpx.org/) | Shared async connections to store APIs. |
 
 The first version will be one Python package and one service. `infrastructure/shops/base.py` defines the common shop operations; each store implements its API access under `infrastructure/shops/<store>/`. Shopping decisions and transport adapters stay separate. The base class covers search, details, and reviews; store-specific capabilities can be added without forcing them on every shop.
 
 ## How to use
 
-### Today
-
-Install [uv](https://docs.astral.sh/uv/), then set up the development environment and run the adapter tests:
+Install [uv](https://docs.astral.sh/uv/) and run:
 
 ```bash
-uv sync
+uv sync --locked
 uv run pytest
+uv run shopping-mcp
 ```
 
-Read the [implementation plan](docs/PLAN.md) for the remaining scope and deployment approach. There is no MCP server command yet because the transport layer has not been implemented.
+For local HTTP:
 
-### After phase 1 is implemented
+```bash
+uv run shopping-mcp --transport http --host 127.0.0.1 --port 8000
+```
 
-Connect a supported agent to the local MCP server or the hosted Streamable HTTP endpoint, then ask questions such as:
+The MCP endpoint is `/mcp`; `/health` provides liveness and `/privacy` explains data use. Both transports share the same six operations and structured results. See [client configuration, Inspector commands and limits](docs/CLIENT_SETUP.md), [deployment](docs/DEPLOYMENT.md) and the [Persian guide](docs/CLIENT_SETUP_FA.md). The server returns clear tool errors when upstream access is unavailable; it never substitutes test data for live products.
 
-- “Find an in-stock laptop under 40 million toman for office work.”
-- “Summarize the buyer reviews of this Digikala product. What problems recur?”
-- “Compare these three phones and show the important differences.”
-- “Find the best-reviewed option within my budget, and explain any trade-offs.”
-
-The release will include exact setup instructions for Cursor, Claude, and ChatGPT once each integration has been tested. Any Custom GPT Action will use the same shopping logic through a small HTTP API; its availability on mobile will be verified before documenting it as a supported path.
+The intended mobile route is a ChatGPT MCP connection/plugin for users in Iran. Render Free is the prototype host, with Frankfurt provisionally selected because Render does not offer an Iran region. The [Render blueprint](render.yaml) probes upstream access before startup. It has not been deployed or validated on a phone; see [phase-0 evidence and acceptance steps](docs/PHASE_0.md).
 
 ## Repository layout
 
-Current files:
-
-```text
-.
-├── README.md
-├── pyproject.toml
-├── src/shopping_mcp/
-│   ├── domain/
-│   │   ├── product/               # Product aggregate and read projections
-│   │   │   ├── product_details.py
-│   │   │   ├── product_summary.py
-│   │   │   ├── offer.py
-│   │   │   ├── specification.py
-│   │   │   └── search_page.py
-│   │   └── review/                # Review aggregate and read projection
-│   │       ├── review.py
-│   │       └── review_page.py
-│   └── infrastructure/
-│       └── shops/
-│           ├── base.py            # Abstract Shop contract
-│           └── digikala/
-│               └── api.py         # Digikala read-only API adapter
-├── tests/                          # Adapter behavior checks
-└── docs/
-    └── PLAN.md                    # Remaining phases and acceptance checks
-```
-
-Later phases will add:
-
 ```text
 src/shopping_mcp/
-├── application/        # Search, comparison, review, and ranking operations
-└── interfaces/         # MCP tools and minimal FastAPI routes
+├── domain/                  # Product/review models and conservative text/reference rules
+├── infrastructure/shops/    # Shared Shop contract and Digikala client/mapping/probe
+├── application/             # Inputs/results, comparison, review synthesis and ranking
+└── interfaces/              # FastMCP tools, HTTP shell, traffic limits and transports
+tests/                       # Synthetic field-shape fixtures and application/protocol tests
+docs/                        # Plan, client setup and access evidence
+render.yaml                  # Gated Render Free prototype configuration
 ```
 
-Digikala API research is kept in a local file excluded from Git. The service will rely on undocumented read-only web endpoints that may change, so deployment requires access checks, bounded request rates, and clear handling of unavailable data.
+Digikala's undocumented read-only endpoints may change or deny access. Prices are converted from rial to toman, variants remain distinct, shipping is unknown, and all tools expose provenance/freshness. Review summaries use attributed explicit evidence and preserve coverage limits. Search supports all Digikala categories. Rankings resolve category IDs dynamically from store suggestions or an explicit category filter, then enforce budget, availability, product type and required specifications before considering price/value and review quality.
+
+## Verification
+
+Run `uv run pytest`, `uv run ruff check src tests` and `uv run ruff format --check src tests`. Current verification covers all six tools over authenticated HTTP, subprocess stdio, mapping/review/ranking behavior, cache freshness and expiry, request limits and upstream failures. Official Inspector discovery and HTTP calls passed; the opt-in five-family live schema check also passed locally on 2026-10-15. See [saved verification](docs/evidence/implementation-check.json). Render and phone acceptance remain pending.
 
 ## Roadmap
 
-1. **Digikala:** Complete the shopping operations and expose the six planned tools using the existing API adapter.
+1. **Digikala:** Validate the implemented six tools against successful live fixtures and linked store evidence.
 2. **Remote access:** Host the MCP endpoint and validate supported client connections and mobile usage.
 3. **More shopping signals:** Add related products, deeper seller analysis, deals, or price snapshots where evidence and usage justify them.
 4. **More stores:** Introduce a store adapter when implementing the second store, then validate cross-store product matching.

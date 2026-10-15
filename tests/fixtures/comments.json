@@ -1,0 +1,74 @@
+{
+  "status": 200,
+  "data": {
+    "pager": {
+      "total_pages": 3,
+      "total_items": 60
+    },
+    "comments": [
+      {
+        "id": 1,
+        "body": "آیا برای بازی خوب است؟",
+        "rate": 0,
+        "is_buyer": false
+      },
+      {
+        "id": 2,
+        "body": "خریدم و استفاده کردم",
+        "rate": 4,
+        "is_buyer": true,
+        "advantages": [
+          "سبک"
+        ],
+        "disadvantages": [
+          "باتری ضعیف"
+        ]
+      },
+      {
+        "id": 3,
+        "body": "خریدم برای کار خوب بود",
+        "rate": 4,
+        "is_buyer": true,
+        "advantages": [
+          "سبک"
+        ]
+      },
+      {
+        "id": 4,
+        "body": "باتری در استفاده ضعیف است",
+        "rate": 2,
+        "is_buyer": true,
+        "disadvantages": [
+          "باتری ضعیف"
+        ],
+        "advantages": [
+          "کیفیت"
+        ]
+      },
+      {
+        "id": 5,
+        "body": "استفاده کردم و کیفیت بد است",
+        "rate": 2,
+        "is_buyer": false,
+        "disadvantages": [
+          "کیفیت"
+        ]
+      },
+      {
+        "id": 6,
+        "body": "خریدم و راضی هستم",
+        "rate": 0,
+        "is_buyer": true,
+        "advantages": [
+          "سبک"
+        ]
+      },
+      {
+        "id": 7,
+        "body": "ارسال کنید لطفا",
+        "rate": 0,
+        "is_buyer": false
+      }
+    ]
+  }
+}

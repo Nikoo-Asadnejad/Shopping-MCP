@@ -1,0 +1,54 @@
+{
+  "observed_at": "2026-10-15T11:02:42.492576+00:00",
+  "location_label": "local/development-location-unverified",
+  "location_verified": false,
+  "note": "Location label is operator-supplied; this does not prove host/device access elsewhere.",
+  "endpoints": {
+    "search": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v1/search/?q=laptop&page=1",
+      "http_status": 200,
+      "body_status": 200,
+      "fixture": "search.json",
+      "schema_valid": true,
+      "elapsed_ms": 1419
+    },
+    "autocomplete": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v1/autocomplete/?q=laptop",
+      "http_status": 200,
+      "body_status": 200,
+      "fixture": "autocomplete.json",
+      "schema_valid": true,
+      "elapsed_ms": 181
+    },
+    "details": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v2/product/20176433/",
+      "http_status": 200,
+      "body_status": 200,
+      "fixture": "details.json",
+      "schema_valid": true,
+      "elapsed_ms": 1111
+    },
+    "comments": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v1/product/20176433/comments/?page=1",
+      "http_status": 200,
+      "body_status": 200,
+      "fixture": "comments.json",
+      "schema_valid": true,
+      "elapsed_ms": 871
+    },
+    "recommendations": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v1/product/20176433/tabular-recommendation/",
+      "http_status": 200,
+      "body_status": 200,
+      "fixture": "recommendations.json",
+      "schema_valid": true,
+      "elapsed_ms": 1587
+    }
+  },
+  "passed": true
+}

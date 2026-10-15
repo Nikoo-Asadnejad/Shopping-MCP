@@ -1,0 +1,90 @@
+{
+  "observed_at": "2026-10-12T19:21:21.172410+00:00",
+  "environment": "local development workspace; geographic location unverified",
+  "render_access_verified": false,
+  "method": "One read-only request per endpoint, sequential, no retries and no followed redirects. User explicitly requested checks of all endpoint families.",
+  "endpoints": {
+    "search": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v1/search/?q=laptop&page=1",
+      "http_status": 200,
+      "body_status": 200,
+      "usable": true,
+      "content_type": "application/json",
+      "redirected": false,
+      "redirects_followed": false,
+      "redirect_to_same_url": false,
+      "mapping_check": {
+        "product_count": 20
+      },
+      "fixture": "search.json",
+      "elapsed_seconds": 3.43
+    },
+    "autocomplete": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v1/autocomplete/?q=laptop",
+      "http_status": 200,
+      "body_status": 200,
+      "usable": true,
+      "content_type": "application/json",
+      "redirected": false,
+      "redirects_followed": false,
+      "redirect_to_same_url": false,
+      "mapping_check": {
+        "suggestion_count": 3
+      },
+      "fixture": "autocomplete.json",
+      "elapsed_seconds": 0.61
+    },
+    "details": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v2/product/20176433/",
+      "http_status": 200,
+      "body_status": 200,
+      "usable": true,
+      "content_type": "application/json",
+      "redirected": false,
+      "redirects_followed": false,
+      "redirect_to_same_url": false,
+      "mapping_check": {
+        "product_id": "20176433",
+        "offer_count": 4
+      },
+      "fixture": "details.json",
+      "elapsed_seconds": 1.56
+    },
+    "comments": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v1/product/20176433/comments/?page=1",
+      "http_status": 200,
+      "body_status": 200,
+      "usable": true,
+      "content_type": "application/json",
+      "redirected": false,
+      "redirects_followed": false,
+      "redirect_to_same_url": false,
+      "mapping_check": {
+        "comment_count": 20
+      },
+      "fixture": "comments.json",
+      "elapsed_seconds": 0.47
+    },
+    "recommendations": {
+      "attempted": true,
+      "url": "https://api.digikala.com/v1/product/20176433/tabular-recommendation/",
+      "http_status": 200,
+      "body_status": 200,
+      "usable": true,
+      "content_type": "application/json",
+      "redirected": false,
+      "redirects_followed": false,
+      "redirect_to_same_url": false,
+      "mapping_check": {
+        "product_count": 20
+      },
+      "fixture": "recommendations.json",
+      "elapsed_seconds": 1.31
+    }
+  },
+  "all_usable": true
+}
