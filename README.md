@@ -60,9 +60,9 @@ For local HTTP:
 uv run shopping-mcp --transport http --host 127.0.0.1 --port 8000
 ```
 
-The MCP endpoint is `/mcp`; `/health` provides liveness and `/privacy` explains data use. Both transports share the same six operations and structured results. See [client configuration, Inspector commands and limits](docs/CLIENT_SETUP.md), [deployment](docs/DEPLOYMENT.md) and the [Persian guide](docs/CLIENT_SETUP_FA.md). The server returns clear tool errors when upstream access is unavailable; it never substitutes test data for live products.
+The MCP endpoint is `/mcp`; `/health` provides liveness, `/health/digikala` checks Digikala search availability on demand (200 or 503, cached for 30 seconds), and `/privacy` explains data use. Both transports share the same six operations and structured results. See [client configuration, Inspector commands and limits](docs/CLIENT_SETUP.md), [deployment](docs/DEPLOYMENT.md) and the [Persian guide](docs/CLIENT_SETUP_FA.md). The server returns clear tool errors when upstream access is unavailable; it never substitutes test data for live products.
 
-The intended mobile route is a ChatGPT MCP connection/plugin for users in Iran. Render Free is the prototype host, with Frankfurt provisionally selected because Render does not offer an Iran region. The [Render blueprint](render.yaml) probes upstream access before startup. It has not been deployed or validated on a phone; see [phase-0 evidence and acceptance steps](docs/PHASE_0.md).
+The intended mobile route is a ChatGPT MCP connection/plugin for users in Iran. Render Free is the prototype host, with Frankfurt provisionally selected because Render does not offer an Iran region. The [Render blueprint](render.yaml) starts the server independently of Digikala availability; upstream access is checked separately. Hosted/mobile acceptance remains pending; see [phase-0 evidence and acceptance steps](docs/PHASE_0.md).
 
 ## Repository layout
 
@@ -74,7 +74,7 @@ src/shopping_mcp/
 └── interfaces/              # FastMCP tools, HTTP shell, traffic limits and transports
 tests/                       # Synthetic field-shape fixtures and application/protocol tests
 docs/                        # Plan, client setup and access evidence
-render.yaml                  # Gated Render Free prototype configuration
+render.yaml                  # Render Free prototype configuration
 ```
 
 Digikala's undocumented read-only endpoints may change or deny access. Prices are converted from rial to toman, variants remain distinct, shipping is unknown, and all tools expose provenance/freshness. Review summaries use attributed explicit evidence and preserve coverage limits. Search supports all Digikala categories. Rankings resolve category IDs dynamically from store suggestions or an explicit category filter, then enforce budget, availability, product type and required specifications before considering price/value and review quality.

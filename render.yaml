@@ -7,7 +7,7 @@ services:
     region: frankfurt
     healthCheckPath: /health
     buildCommand: pip install uv && uv sync --locked --no-dev
-    startCommand: uv run --no-sync shopping-probe --location render/frankfurt --output /tmp/digikala-probe && uv run --no-sync shopping-mcp --transport http --host 0.0.0.0 --port $PORT
+    startCommand: uv run --no-sync shopping-mcp --transport http --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.13

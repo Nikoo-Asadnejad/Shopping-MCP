@@ -6,7 +6,7 @@ Updated 2026-10-15. Intended users are in Iran. The selected delivery route is a
 
 Render Free is the prototype host. [Render's regions](https://render.com/docs/regions) do not include Iran. Frankfurt is the provisional service region, not a claim of Iranian hosting or measured best latency. Test both Digikala access from that service and phone access from Iran. Render Free [sleeps after 15 idle minutes and can take about a minute to restart](https://render.com/docs/free); measure that delay in the actual mobile flow.
 
-`render.yaml` prepares a Free Python web service in Frankfurt. It runs an access probe before starting the MCP server; a failed probe stops startup rather than serving misleading data. The initial manually created service is in Oregon and has not passed startup access validation. The probe report is printed to the deployment log because Render Free's filesystem is ephemeral. Save the report and successful sanitized fixtures externally before treating access as proven.
+`render.yaml` prepares a Free Python web service in Frankfurt. The MCP server now starts independently of upstream availability. `/health` checks liveness; `/health/digikala` checks search access on demand with a 30-second result cache. The initial manually created service is in Oregon and has not passed upstream access validation. The separate manual probe prints its report and saves fixtures to the ephemeral filesystem. Save the report and successful sanitized fixtures externally before treating access as proven.
 
 ## Evidence and remaining gates
 
@@ -18,7 +18,7 @@ Render Free is the prototype host. [Render's regions](https://render.com/docs/re
 
 ## Reproduce a low-volume access check
 
-Run from the actual candidate host (or use the startup probe in the Render blueprint):
+Run manually from the actual candidate host; the probe is no longer part of startup:
 
 ```bash
 uv run shopping-probe --location render/frankfurt --output /tmp/digikala-probe

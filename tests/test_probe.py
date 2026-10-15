@@ -4,8 +4,8 @@ import json
 import httpx
 import pytest
 
+from shopping_mcp.infrastructure.shops.digikala.diagnostics import redirect_diagnostics
 from shopping_mcp.infrastructure.shops.digikala.probe import (
-    _redirect_diagnostics,
     compact,
     probe,
 )
@@ -113,7 +113,7 @@ def test_invalid_redirect_diagnostics_do_not_expose_raw_header(location):
         request=httpx.Request("GET", "https://api.digikala.com/v1/search/"),
         headers={"location": location},
     )
-    assert _redirect_diagnostics(response) == {
+    assert redirect_diagnostics(response) == {
         "redirect_location": "<invalid or unsupported URL>"
     }
 

@@ -12,23 +12,31 @@ uv run ruff format --check src tests
 uv run shopping-mcp --transport http --host 127.0.0.1 --port 8000
 ```
 
-`/mcp` is Streamable HTTP, `/health` is liveness, and `/privacy` is the public privacy/unofficial-service notice. The root page serves the same notice. Health polling never calls Digikala and does not certify upstream availability. Stdio uses `uv run shopping-mcp` and exposes the same tools and application behavior.
+`/mcp` is Streamable HTTP, `/health` is liveness, and `/privacy` is the public privacy/unofficial-service notice. The root page serves the same notice. Polling `/health` never calls Digikala and does not certify upstream availability. `GET /health/digikala` separately checks `https://api.digikala.com/v1/search/?q=laptop&page=1`: HTTP 200 means the search response passed adapter validation; HTTP 503 means access failed, timed out, or returned an incompatible response. The JSON includes the upstream HTTP/body status, check time, duration and sanitized redirect diagnostics. It does not certify the other endpoint families. Results, including failures, are cached for 30 seconds per process and concurrent checks are coalesced. Checks use one request with a 12-second overall deadline, without retries or following redirects. Stdio uses `uv run shopping-mcp` and exposes the same tools and application behavior.
 
 HTTP is stateless and uses JSON tool responses. FastMCP owns protocol handling; its lifespan is propagated into FastAPI so startup and shutdown manage one shared HTTPX client. Clients reconnect after process restart; no session database is needed.
 
 ## Render prototype
 
-Use the repository's [Blueprint](../render.yaml) on the actual Render account. It selects the planned Free Frankfurt prototype, installs the locked environment, runs `shopping-probe`, and starts HTTP on Render's assigned port only after all five endpoint families pass status and schema checks. `/health` is the configured health-check path. See [Render's Blueprint reference](https://render.com/docs/blueprint-spec).
+Use the repository's [Blueprint](../render.yaml) on the actual Render account. It selects the planned Free Frankfurt prototype, installs the locked environment, and starts HTTP on Render's assigned port independently of Digikala availability. The startup probe has been removed; use `/health/digikala` for an on-demand search check and the manual CLI probe for all five endpoint families. `/health` is the configured health-check path. See [Render's Blueprint reference](https://render.com/docs/blueprint-spec).
 
 The first actual service was manually created in Oregon, despite the command’s `render/frankfurt` label. Its diagnostic deployment returned a self-redirect from DigiCDN Edge and failed the access gate; see [captured evidence](evidence/render-oregon-redirect.json). A successful deployment or Digikala access from Render is not claimed.
 
-Save the deployment ID, actual region and startup access report before accepting that host. Probe fixtures under `/tmp/digikala-probe` are ephemeral. A denial, redirect, rate limit or changed schema fails startup. Investigate the report; do not bypass upstream blocks. A successful local probe proves only local access.
+For the existing manually created service, set **Settings → Build & Deploy → Start Command** to the following command; changing the Blueprint does not update this service's saved command:
+
+```bash
+uv run --no-sync shopping-mcp --transport http --host 0.0.0.0 --port $PORT
+```
+
+Keep Render's health-check path at `/health`. A Digikala outage must not cause a restart loop: `/health/digikala` returns 503 for diagnostics while the MCP service remains running and reports upstream tool errors normally. Both health endpoints are public and accept no caller-selected upstream URL or query.
+
+Save the deployment ID, actual region and manual access report before accepting that host. Probe fixtures under `/tmp/digikala-probe` are ephemeral. Investigate upstream failures in the report; do not bypass upstream blocks. A successful local probe proves only local access.
 
 Render's `RENDER_EXTERNAL_HOSTNAME` is automatically allowed by the MCP Host guard. For a custom domain or another host, set `SHOPPING_MCP_ALLOWED_HOSTS` to comma-separated hostnames. Browser origins are checked; configure additional trusted origins with FastMCP's `FASTMCP_HTTP_ALLOWED_ORIGINS` JSON array only when required by the client. The server enables no permissive CORS policy.
 
 For private prototype access, set `SHOPPING_MCP_TOKEN` to a random secret of at least 32 characters in the host's environment, then configure bearer headers in a compatible client. An unset variable permits anonymous read-only use; an empty/short secret stops startup. Authentication is verified on MCP requests through FastMCP with a read-only scope. Health/privacy remain public. This shared-token mode provides no OAuth login or account management; verify support in the selected client. Keep tokens out of repository files and logs. `.env` is ignored and is not loaded automatically.
 
-The current service waits for CI checks to pass before auto-deploying, but the repository has no CI checks. The diagnostic deployment was triggered manually after local tests passed. Configure CI or deliberately select On Commit if automatic deployment is desired; see [Render deploy behavior](https://render.com/docs/deploys).
+The current service is configured to auto-deploy on commit. Earlier diagnostics required a manual deploy when it was configured to wait for nonexistent CI checks; see [Render deploy behavior](https://render.com/docs/deploys).
 
 ## Resource and privacy behavior
 

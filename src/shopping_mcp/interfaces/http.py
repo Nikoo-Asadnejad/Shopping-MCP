@@ -8,6 +8,7 @@ from fastmcp.server.auth import StaticTokenVerifier
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 from shopping_mcp.application.service import ShoppingService
+from shopping_mcp.infrastructure.shops.digikala.health import DigikalaHealthCheck
 
 from .mcp import create_server
 
@@ -121,11 +122,21 @@ def create_http_app(
         openapi_url=None,
     )
     app.add_middleware(RequestSizeLimit)
+    digikala_health = DigikalaHealthCheck()
 
     @app.get("/health")
     async def health():
         # Liveness only: do not turn health polling into upstream traffic.
         return {"status": "ok", "service": "shopping-mcp", "upstream": "not_checked"}
+
+    @app.get("/health/digikala")
+    async def upstream_health():
+        report = await digikala_health.check()
+        return JSONResponse(
+            report,
+            status_code=200 if report["status"] == "ok" else 503,
+            headers={"Cache-Control": "no-store"},
+        )
 
     @app.get("/", response_class=HTMLResponse)
     @app.get("/privacy", response_class=HTMLResponse)
