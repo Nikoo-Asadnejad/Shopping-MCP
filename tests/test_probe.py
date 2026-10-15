@@ -2,8 +2,13 @@ import asyncio
 import json
 
 import httpx
+import pytest
 
-from shopping_mcp.infrastructure.shops.digikala.probe import compact, probe
+from shopping_mcp.infrastructure.shops.digikala.probe import (
+    _redirect_diagnostics,
+    compact,
+    probe,
+)
 
 
 def test_fixture_sanitization():
@@ -41,6 +46,76 @@ def test_probe_stops_on_denied_access(monkeypatch, tmp_path):
     assert result["endpoints"]["search"]["http_status"] == 403
     assert result["endpoints"]["details"]["attempted"] is False
     assert json.loads((tmp_path / "access-report.json").read_text()) == result
+
+
+@pytest.mark.parametrize(
+    "location,expected,same_url",
+    [
+        (
+            "https://api.digikala.com/v1/search/?q=laptop&page=1",
+            "https://api.digikala.com/v1/search/",
+            True,
+        ),
+        (
+            "/challenge/?token=private#private",
+            "https://api.digikala.com/challenge/",
+            False,
+        ),
+        (
+            "https://user:private@other.example/check?token=private#private",
+            "https://other.example/check",
+            False,
+        ),
+    ],
+)
+def test_probe_records_safe_redirect_destination(
+    monkeypatch, tmp_path, location, expected, same_url
+):
+    original = httpx.AsyncClient
+    requests = []
+
+    def handler(request):
+        requests.append(request)
+        return httpx.Response(
+            307,
+            headers={
+                "location": location,
+                "content-type": "text/html",
+                "server": "test-edge",
+                "set-cookie": "private-session=private",
+            },
+        )
+
+    monkeypatch.setattr(
+        "shopping_mcp.infrastructure.shops.digikala.probe.httpx.AsyncClient",
+        lambda **kwargs: original(transport=httpx.MockTransport(handler), **kwargs),
+    )
+    report = asyncio.run(probe(tmp_path, "test host"))
+    search = report["endpoints"]["search"]
+    assert search["redirect_location"] == expected
+    assert search["redirect_same_url"] is same_url
+    assert search["redirect_query_redacted"]
+    assert search["content_type"] == "text/html"
+    assert search["server"] == "test-edge"
+    assert not report["passed"]
+    assert len(requests) == 1  # Never follow the redirect or continue the probe.
+    saved = (tmp_path / "access-report.json").read_text()
+    assert "private" not in saved
+    assert "set-cookie" not in saved
+
+
+@pytest.mark.parametrize(
+    "location", ["https://example.com:invalid/", "javascript:private"]
+)
+def test_invalid_redirect_diagnostics_do_not_expose_raw_header(location):
+    response = httpx.Response(
+        307,
+        request=httpx.Request("GET", "https://api.digikala.com/v1/search/"),
+        headers={"location": location},
+    )
+    assert _redirect_diagnostics(response) == {
+        "redirect_location": "<invalid or unsupported URL>"
+    }
 
 
 def test_probe_validates_all_families_with_production_mappers(

@@ -98,6 +98,26 @@ def compact(value):
     return value
 
 
+def _redirect_diagnostics(response: httpx.Response) -> dict:
+    location = response.headers.get("location")
+    if not location:
+        return {}
+    try:
+        target = response.url.join(location)
+        if target.scheme not in {"http", "https"}:
+            raise ValueError("unsupported redirect scheme")
+        destination = target.copy_with(
+            username=None, password=None, query=None, fragment=None
+        )
+    except (httpx.InvalidURL, ValueError):
+        return {"redirect_location": "<invalid or unsupported URL>"}
+    return {
+        "redirect_location": str(destination),
+        "redirect_query_redacted": bool(target.query),
+        "redirect_same_url": target == response.url,
+    }
+
+
 async def probe(output: Path, location: str, product: str = "20176433"):
     identifier = product_id(product)
     output.mkdir(parents=True, exist_ok=True)
@@ -129,6 +149,9 @@ async def probe(output: Path, location: str, product: str = "20176433"):
                 # One request per endpoint, no retries or automatic challenge redirects.
                 response = await shop._paced_get(path, params)
                 record["http_status"] = response.status_code
+                record["content_type"] = response.headers.get("content-type", "")[:200]
+                record["server"] = response.headers.get("server", "")[:100]
+                record.update(_redirect_diagnostics(response))
                 try:
                     payload = response.json()
                     record["body_status"] = (
