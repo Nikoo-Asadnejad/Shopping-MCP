@@ -26,6 +26,8 @@ def test_fixture_sanitization():
             }
         }
     ) == {"data": {"comments": [{"id": 1, "body": "feedback"}]}}
+    image = {"main": {"url": ["https://example.com/product.jpg"]}}
+    assert compact({"images": image}) == {"images": image}
 
 
 def test_probe_stops_on_denied_access(monkeypatch, tmp_path):

@@ -13,6 +13,7 @@ class ProductSummary(BaseModel):
     id: str
     title: str
     url: str
+    image_url: str | None = None
     available: bool
     price_toman: int | None = Field(default=None, ge=0)
     rating_stars: float | None = Field(default=None, ge=0, le=5)

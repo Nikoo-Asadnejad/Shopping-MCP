@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from typing import Any
+from urllib.parse import urlsplit
 
 from shopping_mcp.domain.errors import ShoppingError
 from shopping_mcp.domain.product import (
@@ -114,6 +115,29 @@ def price_toman(price_rial: int | None) -> int | None:
     return toman if toman > 0 else None
 
 
+def product_image_url(data: dict[str, Any]) -> str | None:
+    images = data.get("images")
+    main = images.get("main") if isinstance(images, dict) else None
+    urls = main.get("url") if isinstance(main, dict) else None
+    if not isinstance(urls, list):
+        return None
+    for url in urls:
+        if not isinstance(url, str) or any(char.isspace() for char in url):
+            continue
+        try:
+            parsed = urlsplit(url)
+            if (
+                parsed.scheme == "https"
+                and parsed.hostname
+                and not parsed.username
+                and not parsed.password
+            ):
+                return url
+        except ValueError:
+            continue
+    return None
+
+
 def product(data: dict[str, Any], retrieved_at: datetime) -> ProductSummary:
     variant = data.get("default_variant") or {}
     rating = data.get("rating") or {}
@@ -139,6 +163,7 @@ def product(data: dict[str, Any], retrieved_at: datetime) -> ProductSummary:
         title=data["title_fa"][:500],
         title_en=(data.get("title_en") or "")[:500] or None,
         url=f"https://www.digikala.com{uri}",
+        image_url=product_image_url(data),
         available=data.get("status") == "marketable"
         and price is not None
         and variant.get("status", "marketable") == "marketable",

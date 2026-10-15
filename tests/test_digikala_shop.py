@@ -1,10 +1,14 @@
 import asyncio
+from datetime import UTC, datetime
 
 import httpx
 import pytest
 
 from shopping_mcp.infrastructure.shops import Shop
 from shopping_mcp.infrastructure.shops.digikala import DigikalaShop, ShopApiError
+from shopping_mcp.infrastructure.shops.digikala.mapping import details, product
+
+IMAGE_URL = "https://dkstatics-public.digikala.com/digikala-products/sample.jpg?x-oss-process=image/resize,m_lfit,h_300,w_300"
 
 
 def _response(data: dict, status: int = 200) -> httpx.Response:
@@ -24,6 +28,7 @@ def test_search_maps_current_offer_and_rating() -> None:
                         "id": 123,
                         "title_fa": "لپ تاپ نمونه",
                         "url": {"uri": "/product/dkp-123/"},
+                        "images": {"main": {"url": [IMAGE_URL]}},
                         "status": "marketable",
                         "rating": {"rate": 80, "count": 20},
                         "default_variant": {"price": {"selling_price": 1250000}},
@@ -40,9 +45,39 @@ def test_search_maps_current_offer_and_rating() -> None:
             assert result.total_items == 42
             assert result.products[0].price_toman == 125000
             assert result.products[0].rating_stars == 4.0
+            assert result.products[0].rating_count == 20
+            assert result.products[0].image_url == IMAGE_URL
             assert result.products[0].available is True
 
     asyncio.run(run())
+
+
+@pytest.mark.parametrize(
+    "images,expected",
+    [
+        (None, None),
+        ({}, None),
+        ([], None),
+        ({"main": None}, None),
+        ({"main": {"url": []}}, None),
+        ({"main": {"url": IMAGE_URL}}, None),
+        ({"main": {"url": [None, 123, "/relative.jpg"]}}, None),
+        ({"main": {"url": ["javascript:alert(1)"]}}, None),
+        ({"main": {"url": ["https://[invalid/image.jpg"]}}, None),
+        ({"main": {"url": ["https://user:secret@example.com/image.jpg"]}}, None),
+        ({"main": {"url": ["https://example.com/image\n.jpg"]}}, None),
+        (
+            {"main": {"url": [None, IMAGE_URL, "https://example.com/other.jpg"]}},
+            IMAGE_URL,
+        ),
+    ],
+)
+def test_optional_image_does_not_break_product_snapshots(payloads, images, expected):
+    data = payloads["details_123"]["data"]["product"]
+    data["images"] = images
+    now = datetime.now(UTC)
+    assert product(data, now).image_url == expected
+    assert details(data, now).image_url == expected
 
 
 def test_details_include_specs_offers_and_upstream_review_overview() -> None:

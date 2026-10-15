@@ -31,6 +31,10 @@ Phase 1 is read-only. Account access, carts, checkout, payments, and a historica
 
 Results include source links and retrieval times. Recommendations distinguish the best-value option from the best-reviewed option when they differ, and explain when the review evidence is too limited for a confident pick.
 
+Product results also include an optional `image_url`. Assistants are instructed to show a numbered list of up to five products by default, each with a linked title, inline image when available, price in toman, availability, and a star rating with its rating count. Missing images are omitted; missing prices and ratings are labeled explicitly. Image rendering depends on the connected chat client.
+
+The server instructs assistants to handle shopping requests exclusively through its Digikala tools, without web search or external browsing, including when results are empty or upstream access fails. These instructions guide the client model; disabling other search tools must be configured in the client if strict enforcement is required.
+
 ## Tech stack
 
 | Technology | Role |

@@ -63,6 +63,8 @@ _FIELDS = {
     "title_en",
     "url",
     "uri",
+    "images",
+    "main",
     "rating",
     "rate",
     "count",

@@ -8,7 +8,13 @@ from shopping_mcp.infrastructure.shops.digikala import DigikalaShop
 from shopping_mcp.interfaces.mcp import create_server
 
 
-def test_discovery_and_all_six_tools(service_factory):
+def test_discovery_and_all_six_tools(service_factory, payloads):
+    image_url = "https://dkstatics-public.digikala.com/digikala-products/sample.jpg"
+    payloads["search"]["data"]["products"][0]["images"] = {"main": {"url": [image_url]}}
+    payloads["details_123"]["data"]["product"]["images"] = {
+        "main": {"url": [image_url]}
+    }
+
     async def run():
         service, upstream, _ = service_factory()
         async with upstream, Client(create_server(service)) as client:
@@ -35,6 +41,14 @@ def test_discovery_and_all_six_tools(service_factory):
                 result = await client.call_tool(name, arguments)
                 assert not result.is_error, (name, result)
                 assert result.structured_content is not None
+                if name == "search_products":
+                    item = result.structured_content["products"][0]
+                    assert item["image_url"] == image_url
+                    assert item["url"] == "https://www.digikala.com/product/dkp-123/"
+                    assert item["rating_stars"] == 4.0
+                    assert item["rating_count"] == 100
+                elif name == "get_product_details":
+                    assert result.structured_content["image_url"] == image_url
             for name, arguments in [
                 ("get_product_details", {"product": "../123"}),
                 ("search_products", {"query": "", "page": 0}),
