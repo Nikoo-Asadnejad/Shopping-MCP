@@ -3,6 +3,7 @@ import asyncio
 import httpx
 import pytest
 
+from shopping_mcp.infrastructure.shops.digikala import DigikalaShop
 from shopping_mcp.infrastructure.shops.digikala.health import DigikalaHealthCheck
 from shopping_mcp.interfaces.http import create_http_app
 
@@ -43,7 +44,7 @@ def test_upstream_failure_does_not_prevent_startup_or_discovery(
             )
 
         monkeypatch.setattr(
-            "shopping_mcp.infrastructure.shops.digikala.health.httpx.AsyncClient",
+            "shopping_mcp.interfaces.http.httpx.AsyncClient",
             lambda **kwargs: original(transport=httpx.MockTransport(handler), **kwargs),
         )
         app = create_http_app(service)
@@ -98,22 +99,23 @@ def test_upstream_success_is_coalesced_cached_and_refreshed(monkeypatch, payload
             return httpx.Response(200, json=payloads["search"])
 
         monkeypatch.setattr(
-            "shopping_mcp.infrastructure.shops.digikala.health.httpx.AsyncClient",
+            "shopping_mcp.interfaces.http.httpx.AsyncClient",
             lambda **kwargs: original(transport=httpx.MockTransport(handler), **kwargs),
         )
         monkeypatch.setattr(
             "shopping_mcp.infrastructure.shops.digikala.health.monotonic", lambda: now
         )
-        checker = DigikalaHealthCheck()
-        reports = await asyncio.gather(*(checker.check() for _ in range(5)))
-        assert len(calls) == 1
-        assert all(report == reports[0] for report in reports)
-        assert reports[0]["status"] == "ok"
-        assert reports[0]["http_status"] == reports[0]["body_status"] == 200
-        assert "products" not in reports[0]
-        now += 31
-        assert (await checker.check())["status"] == "ok"
-        assert len(calls) == 2
+        async with httpx.AsyncClient() as upstream:
+            checker = DigikalaHealthCheck(DigikalaShop(upstream, request_interval=0))
+            reports = await asyncio.gather(*(checker.check() for _ in range(5)))
+            assert len(calls) == 1
+            assert all(report == reports[0] for report in reports)
+            assert reports[0]["status"] == "ok"
+            assert reports[0]["http_status"] == reports[0]["body_status"] == 200
+            assert "products" not in reports[0]
+            now += 31
+            assert (await checker.check())["status"] == "ok"
+            assert len(calls) == 2
 
     asyncio.run(run())
 
@@ -131,16 +133,17 @@ def test_network_failure_is_bounded_and_cached(monkeypatch, error):
             raise error
 
         monkeypatch.setattr(
-            "shopping_mcp.infrastructure.shops.digikala.health.httpx.AsyncClient",
+            "shopping_mcp.interfaces.http.httpx.AsyncClient",
             lambda **kwargs: original(transport=httpx.MockTransport(handler), **kwargs),
         )
-        checker = DigikalaHealthCheck()
-        report = await checker.check()
-        assert report["status"] == "unavailable"
-        assert report["http_status"] is None
-        assert report["code"] == "unavailable"
-        assert "private" not in str(report)
-        assert await checker.check() == report
-        assert len(calls) == 1
+        async with httpx.AsyncClient() as upstream:
+            checker = DigikalaHealthCheck(DigikalaShop(upstream, request_interval=0))
+            report = await checker.check()
+            assert report["status"] == "unavailable"
+            assert report["http_status"] is None
+            assert report["code"] == "unavailable"
+            assert "private" not in str(report)
+            assert await checker.check() == report
+            assert len(calls) == 1
 
     asyncio.run(run())

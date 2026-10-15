@@ -127,9 +127,10 @@ async def probe(output: Path, location: str, product: str = "20176433"):
             }
             started = monotonic()
             try:
-                # One request per endpoint, no retries or automatic challenge redirects.
+                # No transient retries; complete only the bounded CDN cookie handshake.
                 response = await shop._paced_get(path, params)
                 record["http_status"] = response.status_code
+                record["cookie_redirect_followed"] = bool(response.history)
                 record["content_type"] = response.headers.get("content-type", "")[:200]
                 record["server"] = response.headers.get("server", "")[:100]
                 record.update(redirect_diagnostics(response))
@@ -169,6 +170,9 @@ async def probe(output: Path, location: str, product: str = "20176433"):
                     except ShoppingError as exc:
                         record["schema_valid"] = False
                         record["error"] = str(exc)
+            except ShoppingError as exc:
+                record["error"] = str(exc)
+                denied = True
             except httpx.RequestError:
                 record["error"] = "Network unavailable or timed out"
             record["elapsed_ms"] = round((monotonic() - started) * 1000)

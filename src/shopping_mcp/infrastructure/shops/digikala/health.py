@@ -18,7 +18,8 @@ SEARCH_HEALTH_URL = "https://api.digikala.com/v1/search/?q=laptop&page=1"
 class DigikalaHealthCheck:
     """Coalesce concurrent checks and retain successes and failures for 30 seconds."""
 
-    def __init__(self):
+    def __init__(self, shop: DigikalaShop):
+        self._shop = shop
         self._lock = asyncio.Lock()
         self._report: dict | None = None
         self._expires = 0.0
@@ -36,18 +37,15 @@ class DigikalaHealthCheck:
             }
             started = monotonic()
             try:
-                # One fixed request, no retries, redirects, credentials or files.
-                async with (
-                    asyncio.timeout(12),
-                    httpx.AsyncClient(
-                        headers={"User-Agent": "ShoppingMCP/0.1 (read-only research)"}
-                    ) as client,
-                ):
-                    shop = DigikalaShop(client)
+                # Share the tool client's cookie jar and traffic limits. No
+                # transient retries; only the bounded same-URL cookie handshake.
+                async with asyncio.timeout(12):
+                    shop = self._shop
                     response = await shop._paced_get(
                         "/v1/search/", {"q": "laptop", "page": 1}
                     )
                     report["http_status"] = response.status_code
+                    report["cookie_redirect_followed"] = bool(response.history)
                     report["content_type"] = response.headers.get("content-type", "")[
                         :200
                     ]

@@ -63,7 +63,8 @@ class DigikalaShop(Shop):
     """Caller owns the shared client and closes it at service shutdown.
 
     Default: at most 3 concurrent requests, one start per second, and one retry
-    for network failures or 502/503/504. No retries for denial or rate limits.
+    for network failures or 502/503/504. Complete a same-URL CDN cookie
+    handshake once per attempt; no retries for denial or rate limits.
     """
 
     def __init__(
@@ -182,16 +183,56 @@ class DigikalaShop(Shop):
             raise mapping.changed("invalid field shape or value") from exc
 
     async def _paced_get(self, path: str, params: dict | None) -> httpx.Response:
+        response = await self._request_once(path, params)
+        if self._is_cookie_handshake(response):
+            initial = response
+            response = await self._request_once(path, params)
+            response.history = [initial]
+        return response
+
+    @staticmethod
+    def _is_cookie_handshake(response: httpx.Response) -> bool:
+        if response.status_code != 307 or not any(
+            cookie.name == "digicdn_cookie" and cookie.value
+            for cookie in response.cookies.jar
+        ):
+            return False
+        location = response.headers.get("location")
+        if not location:
+            return False
+        try:
+            destination = response.url.join(location)
+        except (httpx.InvalidURL, ValueError):
+            return False
+        return (
+            destination == response.url
+            and destination.scheme == "https"
+            and destination.host == "api.digikala.com"
+            and not destination.username
+            and not destination.password
+        )
+
+    async def _request_once(self, path: str, params: dict | None) -> httpx.Response:
         async with self._semaphore:
             async with self._pace_lock:
                 await asyncio.sleep(max(0, self._next_request - monotonic()))
                 self._next_request = monotonic() + self._interval
-            return await self._client.get(
-                f"{_API_URL}{path}",
-                params=params,
-                timeout=_TIMEOUT,
-                follow_redirects=False,
-            )
+            try:
+                return await self._client.get(
+                    f"{_API_URL}{path}",
+                    params=params,
+                    timeout=_TIMEOUT,
+                    follow_redirects=False,
+                )
+            except httpx.InvalidURL as exc:
+                # HTTPX prepares a redirect request even when following is off.
+                raise ShoppingError("Digikala returned an invalid redirect") from exc
+            except httpx.RemoteProtocolError as exc:
+                if isinstance(exc.__context__, httpx.InvalidURL):
+                    raise ShoppingError(
+                        "Digikala returned an invalid redirect"
+                    ) from exc
+                raise
 
     async def _get(
         self, path: str, params: dict[str, Any] | None = None

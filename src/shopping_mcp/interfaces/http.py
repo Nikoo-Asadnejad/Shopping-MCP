@@ -1,13 +1,16 @@
 """Small HTTP shell around the same MCP application operations."""
 
 import os
+from contextlib import AsyncExitStack, asynccontextmanager
 
+import httpx
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastmcp.server.auth import StaticTokenVerifier
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 from shopping_mcp.application.service import ShoppingService
+from shopping_mcp.infrastructure.shops.digikala import DigikalaShop
 from shopping_mcp.infrastructure.shops.digikala.health import DigikalaHealthCheck
 
 from .mcp import create_server
@@ -25,7 +28,9 @@ Your MCP client and hosting provider have their own privacy policies.</p>
 <p>The application reuses successful store responses from memory for up to 30 seconds
 (at most 128 entries). Expired entries are cleared on the next cache lookup;
 eviction or restart also removes them.
-It has no shopper database, cookies, analytics or persistent query history.
+It keeps Digikala's CDN cookie in memory until expiry or restart to complete
+the upstream cookie handshake. No cookies are set on your device.
+It has no shopper database, analytics or persistent query history.
 Application tool logs contain the operation name, outcome and duration;
 they exclude tool arguments, query text, review bodies and authorization headers.
 The host may retain its own connection and deployment logs.</p>
@@ -78,7 +83,10 @@ class RequestSizeLimit:
 
 
 def create_http_app(
-    service: ShoppingService | None = None, *, token: str | None = None
+    service: ShoppingService | None = None,
+    *,
+    token: str | None = None,
+    shop: DigikalaShop | None = None,
 ) -> FastAPI:
     """Stateless MCP sessions survive process restarts by reconnecting normally.
 
@@ -106,6 +114,16 @@ def create_http_app(
     ]
     if render_host := os.getenv("RENDER_EXTERNAL_HOSTNAME"):
         hosts.append(render_host)
+    # The HTTP composition root owns one client for tools and upstream health.
+    # An injected shop remains caller-owned, as in the stdio service tests.
+    client = None
+    if shop is None:
+        client = httpx.AsyncClient(
+            limits=httpx.Limits(max_connections=3, max_keepalive_connections=3),
+            headers={"User-Agent": "ShoppingMCP/0.1 (read-only research)"},
+        )
+        shop = DigikalaShop(client)
+    service = service or ShoppingService(shop, shop.get_search_suggestions)
     mcp_app = create_server(service, auth=auth).http_app(
         path="/mcp",
         stateless_http=True,
@@ -113,16 +131,25 @@ def create_http_app(
         host_origin_protection=True,
         allowed_hosts=hosts or None,
     )
+
     # Mounted applications do not run their own lifespan; propagate it explicitly.
+    @asynccontextmanager
+    async def lifespan(app):
+        async with AsyncExitStack() as stack:
+            if client is not None:
+                await stack.enter_async_context(client)
+            await stack.enter_async_context(mcp_app.lifespan(app))
+            yield
+
     app = FastAPI(
         title="Shopping MCP",
-        lifespan=mcp_app.lifespan,
+        lifespan=lifespan,
         docs_url=None,
         redoc_url=None,
         openapi_url=None,
     )
     app.add_middleware(RequestSizeLimit)
-    digikala_health = DigikalaHealthCheck()
+    digikala_health = DigikalaHealthCheck(shop)
 
     @app.get("/health")
     async def health():

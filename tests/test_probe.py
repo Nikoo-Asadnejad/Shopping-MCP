@@ -118,12 +118,48 @@ def test_invalid_redirect_diagnostics_do_not_expose_raw_header(location):
     }
 
 
+def test_probe_records_invalid_redirect_as_terminal_failure(monkeypatch, tmp_path):
+    original = httpx.AsyncClient
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(
+            307,
+            headers={"location": "https://api.digikala.com:invalid/?private=secret"},
+        )
+
+    monkeypatch.setattr(
+        "shopping_mcp.infrastructure.shops.digikala.probe.httpx.AsyncClient",
+        lambda **kwargs: original(transport=httpx.MockTransport(handler), **kwargs),
+    )
+    report = asyncio.run(probe(tmp_path, "test"))
+    assert not report["passed"]
+    assert len(calls) == 1
+    assert (
+        report["endpoints"]["search"]["error"]
+        == "Digikala returned an invalid redirect"
+    )
+    assert report["endpoints"]["details"]["attempted"] is False
+    assert "secret" not in (tmp_path / "access-report.json").read_text()
+
+
 def test_probe_validates_all_families_with_production_mappers(
     monkeypatch, tmp_path, payloads
 ):
     original = httpx.AsyncClient
+    requests = []
 
     def handler(request):
+        requests.append(request)
+        if "digicdn_cookie=test-cookie" not in request.headers.get("cookie", ""):
+            return httpx.Response(
+                307,
+                headers={
+                    "location": str(request.url),
+                    "set-cookie": "digicdn_cookie=test-cookie; Path=/; Secure",
+                },
+            )
         path = request.url.path
         if path == "/v1/search/":
             name = "search"
@@ -144,6 +180,9 @@ def test_probe_validates_all_families_with_production_mappers(
     report = asyncio.run(probe(tmp_path, "test", product="123"))
     assert report["passed"]
     assert len(report["endpoints"]) == 5
+    assert report["endpoints"]["search"]["cookie_redirect_followed"]
+    assert len(requests) == 6
+    assert "test-cookie" not in (tmp_path / "access-report.json").read_text()
     assert all(record["schema_valid"] for record in report["endpoints"].values())
     assert all("elapsed_ms" in record for record in report["endpoints"].values())
 

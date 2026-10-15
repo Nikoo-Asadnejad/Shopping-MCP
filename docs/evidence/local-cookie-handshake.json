@@ -1,0 +1,20 @@
+{
+  "observed_at": "2026-10-15T13:42:40.603554+00:00",
+  "location": "local laptop; network location unverified",
+  "liveness_http_status": 200,
+  "upstream_health_http_status": 200,
+  "upstream_health": {
+    "status": "ok",
+    "endpoint": "https://api.digikala.com/v1/search/?q=laptop&page=1",
+    "checked_at": "2026-10-15T13:42:40.641926+00:00",
+    "http_status": 200,
+    "body_status": 200,
+    "cookie_redirect_followed": true,
+    "content_type": "application/json",
+    "server": "DigiCDN Edge",
+    "elapsed_ms": 3139
+  },
+  "tool_count": 6,
+  "search_is_error": false,
+  "search_product_count": 20
+}
